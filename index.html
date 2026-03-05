@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Рецепты Великих Шефов</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0E0C0A;--surface:#161310;--card:#1C1815;--border:#2A2420;
+  --gold:#C9924A;--gold-light:#E5B86A;--cream:#F2E8D5;--muted:#7A6A5A;--text:#E8DDD0;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+
+/* ── HERO ── */
+.hero{position:relative;padding:44px 20px 36px;background:var(--surface);border-bottom:1px solid var(--border);overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 80% at 8% 55%,rgba(201,146,74,.13) 0%,transparent 65%),radial-gradient(ellipse 35% 50% at 92% 15%,rgba(100,140,200,.07) 0%,transparent 55%)}
+.hero-inner{position:relative;max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:60px;flex-wrap:wrap}
+.hero-text{flex:1;min-width:280px}
+.hero-label{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;animation:heroFadeDown .6s ease both}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,8vw,96px);line-height:.92;letter-spacing:2px;color:var(--cream);margin-bottom:20px;animation:heroFadeDown .7s .1s ease both}
+.hero-title em{font-style:normal;color:var(--gold)}
+.hero-desc{font-family:'Cormorant Garamond',serif;font-size:19px;font-style:italic;color:var(--muted);line-height:1.65;max-width:460px;margin-bottom:28px;animation:heroFadeUp .7s .2s ease both}
+.hero-stats{display:flex;gap:32px;flex-wrap:wrap;align-items:center;animation:heroFadeUp .7s .35s ease both}
+.stat-n{font-family:'Bebas Neue',sans-serif;font-size:40px;line-height:1;color:var(--gold);animation:statPop .6s .4s cubic-bezier(.34,1.56,.64,1) both}
+.stat-l{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-top:1px}
+.search-wrap{flex:0 0 300px;animation:heroFadeUp .7s .25s ease both}
+.search-input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:24px;padding:13px 18px 13px 44px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s}
+.search-input:focus{border-color:var(--gold)}
+.search-input::placeholder{color:var(--muted)}
+.search-wrap{position:relative}
+.search-ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:.35;font-size:15px;pointer-events:none}
+
+/* ── NAV ── */
+.snav{position:sticky;top:0;z-index:100;background:rgba(14,12,10,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;gap:0;overflow-x:auto;scrollbar-width:none}
+.snav::-webkit-scrollbar{display:none}
+.stab{display:flex;align-items:center;gap:7px;padding:15px 18px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;font-family:'DM Sans',sans-serif;font-weight:500}
+.stab:hover{color:var(--text)}
+.stab.active{color:var(--cream);border-bottom-color:var(--gold);transition:color .2s,border-bottom-color .2s}
+.stab .te{font-size:15px}
+
+/* ── MAIN ── */
+main{max-width:680px;margin:0 auto;padding:28px 16px 80px}
+.section-panel{display:none}
+.section-panel.active{display:block;animation:secIn .35s cubic-bezier(.16,1,.3,1) both}
+.sec-top{margin-bottom:36px}
+.sec-title-row{display:flex;align-items:flex-end;gap:16px;margin-bottom:14px;flex-wrap:wrap}
+.sec-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,6vw,68px);letter-spacing:2px;line-height:1;color:var(--cream)}
+.sec-emoji{font-size:46px;margin-bottom:2px}
+.sec-sub{font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:var(--muted);margin-bottom:24px}
+
+/* cat tabs + filters */
+.filters-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:32px}
+.cat-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.ctab{padding:7px 16px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:20px;transition:all .2s;font-family:'DM Sans',sans-serif;font-weight:500}
+.ctab:hover{color:var(--text);border-color:var(--muted)}
+.ctab.active{color:#000;border-color:var(--gold);background:var(--gold)}
+
+/* filter button */
+.filter-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:20px;transition:all .2s;font-family:'DM Sans',sans-serif;font-weight:500;white-space:nowrap}
+.filter-btn:hover{color:var(--text);border-color:var(--muted)}
+.filter-btn.open{color:var(--gold);border-color:var(--gold);background:rgba(201,146,74,.08)}
+.filter-badge{background:var(--gold);color:#000;border-radius:50%;width:16px;height:16px;font-size:9px;display:inline-flex;align-items:center;justify-content:center;font-weight:700}
+
+/* filter panel dropdown */
+.fpanel{display:none;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:24px;animation:fIn .18s ease}
+.fpanel.open{display:block}
+
+.fpanel-sections{display:flex;gap:28px;flex-wrap:wrap}
+.fpanel-group{flex:1;min-width:180px}
+.fpanel-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.ftag-wrap{display:flex;gap:6px;flex-wrap:wrap}
+.ftag{padding:5px 12px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:10px;cursor:pointer;border-radius:16px;transition:all .2s;font-family:'DM Sans',sans-serif}
+.ftag:hover{color:var(--text);border-color:var(--muted)}
+.ftag.active{color:var(--gold);border-color:var(--gold);background:rgba(201,146,74,.1)}
+.fpanel-reset{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.fpanel-reset button{padding:5px 14px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:16px;font-family:'DM Sans',sans-serif;transition:all .2s}
+.fpanel-reset button:hover{color:var(--text);border-color:var(--text)}
+
+/* ── GRID ── */
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+
+/* ── CARD ── */
+.rcard{background:var(--card);border:1px solid var(--border);cursor:pointer;transition:transform .25s,border-color .25s,box-shadow .25s;position:relative;overflow:hidden;border-radius:12px}
+.rcard:hover{border-color:rgba(201,146,74,.45);transform:translateY(-3px);box-shadow:0 18px 44px rgba(0,0,0,.55)}
+.rcard:active{transform:scale(.97);transition:transform .1s}
+.rcard-img{height:170px;display:flex;align-items:center;justify-content:center;font-size:76px;position:relative;overflow:hidden}
+.rcard-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.72) 0%,rgba(0,0,0,.08) 60%)}
+.rcard-n{position:absolute;top:11px;left:11px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;color:rgba(255,255,255,.45);z-index:2}
+.rcard-fav{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;z-index:3;transition:all .25s;backdrop-filter:blur(4px)}
+.rcard-fav:active{animation:tapPop .2s ease}
+.rcard-fav:hover,.rcard-fav.on{color:#e8b84b;border-color:#e8b84b;background:rgba(232,184,75,.15)}
+.tbadge{position:absolute;bottom:10px;right:10px;padding:3px 10px;font-size:8px;letter-spacing:1px;text-transform:uppercase;font-weight:600;border-radius:12px;z-index:2;white-space:nowrap}
+.bq{background:#1e3d2a;color:#5fc97a}.bm{background:#3d3010;color:#c9a030}.bs{background:#3d1515;color:#c96060}.bo{background:#28153d;color:#9060c9}.bd{background:#10203d;color:#4080c9}
+.rcard-body{padding:16px 18px 18px}
+.rcard-chef{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);opacity:.8;margin-bottom:5px}
+.rcard-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--cream);line-height:1.2;margin-bottom:7px}
+.rcard-desc{font-size:11px;line-height:1.6;color:var(--muted);margin-bottom:12px}
+.rcard-foot{display:flex;gap:10px;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap}
+.rmeta{display:flex;align-items:center;gap:3px;font-size:10px;color:var(--muted)}
+
+/* ── MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:flex-start;justify-content:center;padding:28px 16px;overflow-y:auto}
+.overlay.open{display:flex;animation:backdropIn .2s ease}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;max-width:660px;width:100%;position:relative;margin:auto;animation:mIn .45s cubic-bezier(.16,1,.3,1) both;overflow:hidden}
+
+.mhero{height:200px;display:flex;align-items:center;justify-content:center;font-size:105px;position:relative}
+.mhero::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--surface) 0%,transparent 55%)}
+.mclose{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.5);color:var(--text);border:1px solid var(--border);width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;z-index:10;transition:all .2s;border-radius:50%}
+.mclose:hover{background:rgba(201,146,74,.2);border-color:var(--gold)}
+.mbody{padding:28px 32px 38px}
+.mchef{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+.mtitle{font-family:'Bebas Neue',sans-serif;font-size:38px;letter-spacing:1px;color:var(--cream);line-height:1;margin-bottom:14px}
+.mtags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--border)}
+.mtag{padding:4px 11px;border:1px solid var(--border);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.msec{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;margin-top:22px}
+.igrid{display:grid;grid-template-columns:1fr 1fr;gap:5px 18px}
+.iitem{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--text);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:baseline;gap:7px}
+.iitem::before{content:'—';color:var(--gold);font-size:11px;opacity:.5;flex-shrink:0}
+.slist{list-style:none;display:flex;flex-direction:column;gap:13px}
+.sitem{display:flex;gap:13px}
+.sn{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--gold);opacity:.3;min-width:28px;line-height:1.1}
+.stxt{font-family:'Cormorant Garamond',serif;font-size:16px;line-height:1.6;color:var(--text);padding-top:2px}
+.tipbox{background:rgba(201,146,74,.07);border-left:2px solid var(--gold);padding:12px 16px;margin-top:24px}
+.tiplabel{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:5px}
+.tiptxt{font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:var(--text);line-height:1.6}
+.origbox{display:flex;gap:7px;align-items:flex-start;padding:12px 16px;background:rgba(255,255,255,.02);border:1px solid var(--border);margin-top:14px}
+.origflag{font-size:20px;flex-shrink:0;margin-top:1px}
+.origtxt{font-size:11px;line-height:1.5;color:var(--muted)}
+/* pairings */
+.pairbox{margin-top:22px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.pairlabel{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);padding:13px 18px 10px;background:rgba(201,146,74,.05);border-bottom:1px solid var(--border)}
+.pairs-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.pair-item{padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.04);display:flex;flex-direction:column;gap:3px}
+.pair-item:nth-child(odd){border-right:1px solid rgba(255,255,255,.04)}
+.pair-ico{font-size:16px;line-height:1}
+.pair-cat{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);opacity:.7;margin-top:2px}
+.pair-vals{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--text);line-height:1.45}
+
+/* glass ? button */
+.glass-btn{position:fixed;top:14px;right:14px;z-index:200;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:rgba(255,255,255,.55);font-size:15px;font-weight:600;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;letter-spacing:0}
+.glass-btn:active{background:rgba(201,146,74,.18);border-color:rgba(201,146,74,.4);color:var(--gold)}
+
+/* orig link */
+.orig-link{color:#6aabdf;font-size:10px;letter-spacing:.5px;text-decoration:none;display:inline-block;margin-top:5px;transition:opacity .2s}
+.orig-link:hover{opacity:.75;text-decoration:underline}
+
+/* pair tip inside pair-item */
+.pair-tip{font-size:10px;color:var(--muted);font-style:italic;line-height:1.4;display:block;margin-top:3px}
+
+/* season tab highlight in nav */
+.stab.season-tab{color:#5faa7a}
+.stab.season-tab.active{color:#6edd98;border-bottom-color:#4a8a6a}
+/* pulse animation */
+
+
+/* glossary overlay */
+.gloss-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);backdrop-filter:blur(10px);z-index:1200;display:none;align-items:flex-start;justify-content:center;padding:28px 16px;overflow-y:auto}
+.gloss-overlay.open{display:flex;animation:backdropIn .25s ease}
+.gloss-modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;max-width:680px;width:100%;position:relative;margin:auto;animation:mIn .45s cubic-bezier(.16,1,.3,1) both}
+.gloss-head{padding:28px 32px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px}
+.gloss-head-ico{width:44px;height:44px;background:rgba(201,146,74,.12);border:1px solid rgba(201,146,74,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--gold);flex-shrink:0}
+.gloss-head-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;color:var(--cream)}
+.gloss-head-sub{font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:2px}
+.gloss-body{padding:24px 32px 36px}
+.gloss-letter{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold);margin:18px 0 8px;letter-spacing:2px}
+.gloss-letter:first-child{margin-top:0}
+.gloss-item{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);display:grid;grid-template-columns:160px 1fr;gap:12px}
+.gloss-term{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--cream);font-style:italic}
+.gloss-def{font-size:12px;color:var(--muted);line-height:1.6}
+@media(max-width:520px){.gloss-item{grid-template-columns:1fr}.gloss-body{padding:20px 18px 32px}.gloss-head{padding:20px 18px 16px}}
+
+/* pair open button (keep for removal) */
+.pair-open-btn{width:100%;margin-top:22px;padding:14px 20px;background:linear-gradient(135deg,rgba(201,146,74,.12),rgba(201,146,74,.06));border:1px solid rgba(201,146,74,.35);border-radius:12px;color:var(--gold);font-family:'DM Sans',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px}
+.pair-open-btn:hover{background:linear-gradient(135deg,rgba(201,146,74,.22),rgba(201,146,74,.12));border-color:var(--gold);transform:translateY(-1px)}
+.pair-open-btn::after{content:'→';opacity:.6}
+
+/* pairing overlay */
+.pair-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(12px);z-index:1100;display:none;align-items:flex-end;justify-content:center;padding:0}
+.pair-overlay.open{display:flex;animation:fadeIn .2s ease}
+.pair-modal{background:var(--surface);border:1px solid var(--border);border-radius:20px 20px 0 0;max-width:680px;width:100%;position:relative;max-height:88vh;overflow-y:auto;animation:slideUp .5s cubic-bezier(.16,1,.3,1) both}
+
+.pair-modal-hero{height:6px;background:linear-gradient(90deg,var(--gold),#c94a4a,var(--gold));opacity:.6}
+.pair-modal-body{padding:30px 32px 44px}
+.pair-modal-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;color:var(--cream);margin-bottom:4px}
+.pair-modal-sub{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.pair-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pm-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:6px;transition:border-color .2s}
+.pm-card:hover{border-color:rgba(201,146,74,.4)}
+.pm-card-ico{font-size:22px;line-height:1}
+.pm-card-cat{font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-top:2px}
+.pm-card-vals{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--text);line-height:1.5;margin-top:2px}
+.pm-card-tip{font-size:10px;color:var(--muted);line-height:1.45;margin-top:4px;font-style:italic}
+@media(max-width:520px){.pair-modal-grid{grid-template-columns:1fr}.pair-modal-body{padding:24px 20px 36px}}
+
+/* season strip */
+.season-strip{background:linear-gradient(90deg,rgba(74,138,106,.18),rgba(74,138,106,.06));border-bottom:1px solid rgba(74,138,106,.25);padding:10px 20px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .2s;overflow:hidden;position:relative;animation:heroFadeDown .5s .5s ease both}
+.season-strip:active{background:rgba(74,138,106,.22)}
+.season-strip-dot{width:6px;height:6px;border-radius:50%;background:#4a8a6a;flex-shrink:0;animation:pulse 2.2s infinite}
+.season-strip-label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:#5faa7a;white-space:nowrap}
+.season-strip-sep{width:1px;height:14px;background:rgba(74,138,106,.3);flex-shrink:0}
+.season-strip-recs{display:flex;gap:6px;overflow:hidden;flex:1}
+.season-strip-chip{font-size:11px;color:rgba(242,232,213,.7);white-space:nowrap;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:2px 10px;flex-shrink:0}
+.season-strip-arr{font-size:14px;color:#5faa7a;flex-shrink:0;margin-left:auto}
+
+/* season overlay */
+.season-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);backdrop-filter:blur(10px);z-index:1100;display:none;align-items:flex-end;justify-content:center}
+.season-overlay.open{display:flex;animation:backdropIn .2s ease}
+.season-sheet{background:var(--surface);border:1px solid var(--border);border-radius:20px 20px 0 0;width:100%;max-width:680px;max-height:88vh;overflow-y:auto;animation:slideUp .5s cubic-bezier(.16,1,.3,1) both}
+.season-sheet-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
+.season-sheet-head{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.season-sheet-ico{font-size:28px}
+.season-sheet-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;color:var(--cream);line-height:1}
+.season-sheet-desc{font-size:11px;color:var(--muted);margin-top:2px}
+.season-sheet-grid{padding:16px 14px 32px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+
+/* ═══ ANIMATIONS ═══ */
+
+/* Hero entrance */
+@keyframes heroFadeDown{from{opacity:0;transform:translateY(-22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes heroFadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+/* Card stagger */
+@keyframes cardIn{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* Section fade */
+@keyframes secIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+
+/* Modal spring */
+@keyframes mIn{from{opacity:0;transform:translateY(36px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* Sheet spring */
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* Filter panel */
+@keyframes fIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Shimmer */
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+
+/* Pulse */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* Tap feedback */
+@keyframes tapPop{0%{transform:scale(1)}50%{transform:scale(.94)}100%{transform:scale(1)}}
+
+/* Nav underline slide */
+@keyframes slideIn{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+/* Overlay backdrop */
+@keyframes backdropIn{from{opacity:0}to{opacity:1}}
+
+/* Stat counter */
+@keyframes statPop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+
+/* search */
+.search-sec{display:none}
+.search-sec.active{display:block}
+.no-res{text-align:center;padding:60px 20px;color:var(--muted);font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic}
+
+/* fav panel */
+.fav-panel{display:none}
+.fav-panel.active{display:block}
+.fav-empty{text-align:center;padding:80px 20px;color:var(--muted);font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic}
+
+/* bg gradient classes */
+.g1{background:linear-gradient(145deg,#3d1a1a,#6b2a2a)}
+.g2{background:linear-gradient(145deg,#3d2a1a,#6b4a2a)}
+.g3{background:linear-gradient(145deg,#3d3a1a,#5a5020)}
+.g4{background:linear-gradient(145deg,#1a3d2a,#2a6b4a)}
+.g5{background:linear-gradient(145deg,#1a2a3d,#2a4a6b)}
+.g6{background:linear-gradient(145deg,#2a1a3d,#4a2a6b)}
+.g7{background:linear-gradient(145deg,#3d1a2a,#6b2a4a)}
+.g8{background:linear-gradient(145deg,#1a3d3d,#2a6b6b)}
+.g9{background:linear-gradient(145deg,#2a3d1a,#4a6b2a)}
+.g10{background:linear-gradient(145deg,#1a1a3d,#2a2a6b)}
+
+@media(max-width:700px){
+  .hero{padding:36px 16px 28px}
+  .hero-title{font-size:48px}
+  .hero-inner{gap:20px}
+  .rgrid{grid-template-columns:1fr}
+  .mbody{padding:18px 16px 28px}
+  .igrid{grid-template-columns:1fr}
+  .search-wrap{flex:1 1 100%}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-label">Кулинарная библиотека · Рецепты со всего мира</div>
+      <h1 class="hero-title">Лучшие<br>рецепты<br><em>мира</em></h1>
+      <p class="hero-desc">Проверенные рецепты от Гордона Рамзи, Джеймса Оливера, Джулии Чайлд, Массимо Боттуры и других — пошагово, с советами шефов.</p>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-n" id="cnt">0</div><div class="stat-l">рецептов</div></div>
+        <div class="stat"><div class="stat-n">7</div><div class="stat-l">разделов</div></div>
+        <div class="stat"><div class="stat-n">35+</div><div class="stat-l">великих шефов</div></div>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <span class="search-ico">🔍</span>
+      <input class="search-input" type="text" placeholder="Блюдо, шеф, ингредиент..." id="si" oninput="doSearch(this.value)">
+    </div>
+  </div>
+</header>
+
+<div class="season-strip" id="season-strip" onclick="openSeasonSheet()">
+  <span class="season-strip-dot"></span>
+  <span class="season-strip-label" id="sstrip-label">Сейчас в сезоне</span>
+  <span class="season-strip-sep"></span>
+  <div class="season-strip-recs" id="sstrip-recs"></div>
+  <span class="season-strip-arr">›</span>
+</div>
+<nav class="snav" id="snav"></nav>
+<button class="glass-btn" onclick="openGlossary()" title="Кулинарный словарь">?</button>
+<main id="mainContent"></main>
+
+<div class="overlay" id="overlay" onclick="closeOverlay(event)">
+  <div class="modal">
+    <button class="mclose" onclick="closeModal()">✕</button>
+    <div class="mhero" id="mhero"></div>
+    <div class="mbody">
+      <div class="mchef" id="mchef"></div>
+      <div class="mtitle" id="mtitle"></div>
+      <div class="mtags" id="mtags"></div>
+      <div class="msec">Ингредиенты</div>
+      <div class="igrid" id="mingr"></div>
+      <div class="msec">Приготовление</div>
+      <ol class="slist" id="msteps"></ol>
+      <div class="tipbox" id="mtip"></div>
+      <div id="morig"></div>
+      <div class="pairbox" id="mpairs" style="display:none">
+        <div class="pairlabel">🤝 Что подходит к блюду</div>
+        <div class="pairs-grid" id="mpairs-grid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="pair-overlay" id="pair-overlay" onclick="closePairingOverlay(event)">
+  <div class="pair-modal">
+    <button class="mclose" onclick="closePairing()">✕</button>
+    <div class="pair-modal-hero" id="pmhero"></div>
+    <div class="pair-modal-body">
+      <div class="pair-modal-title" id="pmtitle"></div>
+      <div class="pair-modal-sub">Подбор к блюду</div>
+      <div class="pair-modal-grid" id="pmgrid"></div>
+    </div>
+  </div>
+</div>
+
+<div class="gloss-overlay" id="gloss-overlay" onclick="closeGlossaryOverlay(event)">
+  <div class="gloss-modal">
+    <button class="mclose" onclick="closeGlossary()">✕</button>
+    <div class="gloss-head">
+      <div class="gloss-head-ico">?</div>
+      <div><div class="gloss-head-title">Кулинарный словарь</div><div class="gloss-head-sub">Термины и техники</div></div>
+    </div>
+    <div class="gloss-body" id="gloss-body"></div>
+  </div>
+</div>
+
+<div class="season-overlay" id="season-overlay" onclick="closeSeasonOverlay(event)">
+  <div class="season-sheet">
+    <div class="season-sheet-handle"></div>
+    <div class="season-sheet-head">
+      <div class="season-sheet-ico" id="ssheet-ico"></div>
+      <div>
+        <div class="season-sheet-title" id="ssheet-title"></div>
+        <div class="season-sheet-desc" id="ssheet-desc"></div>
+      </div>
+    </div>
+    <div class="season-sheet-grid" id="ssheet-grid"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  SECTIONS
+// ═══════════════════════════════════════════════════
+const SECTIONS=[
+  {id:'desserts', e:'🍰', name:'Десерты',      color:'#b84a7a'},
+  {id:'pasta',    e:'🍝', name:'Паста',         color:'#8a7a2a'},
+  {id:'baking',   e:'🍞', name:'Выпечка',       color:'#c9924a'},
+  {id:'meat',     e:'🥩', name:'Мясо',          color:'#c94a4a'},
+  {id:'soups',    e:'🍲', name:'Супы',          color:'#6a4a8a'},
+  {id:'grains',   e:'🌾', name:'Крупы и злаки', color:'#4a8a6a'},
+  {id:'fish',     e:'🐟', name:'Рыба',          color:'#3a6a8a'},
+  {id:'favs',     e:'⭐', name:'Избранное',     color:'#c9924a'},
+];
+
+// ═══════════════════════════════════════════════════
+//  RECIPES
+// ═══════════════════════════════════════════════════
+const R=[
+
+// ─────────────── ДЕСЕРТЫ ───────────────
+{id:1,s:'desserts',cat:'Классика',e:'🍮',g:'g7',
+ chef:'Жоэль Робюшон',t:'Крем-брюле',
+ orig:'🇫🇷 Франция · L\'Atelier de Joël Robuchon ★★★',
+ desc:'Ванильный заварной крем под хрустящей карамельной корочкой. Треск ложечки — один из лучших звуков на кухне.',
+ time:'4 ч',tt:'medium',diff:'Легко',srv:'6 порций',
+ ingr:['500 мл сливок 35%','6 желтков','100 г сахара','1 стручок ванили','6 ч.л. коричневого сахара'],
+ steps:['Нагреть сливки с ванилью до 80°C, настоять 20 мин.','Желтки взбить с сахаром добела, тонкой струйкой влить сливки.','Процедить, разлить по формочкам.','Выпекать на водяной бане при 120°C 50–55 мин — центр должен дрожать.','Охладить 3–4 ч. Перед подачей посыпать сахаром и поджечь горелкой.'],
+ tip:'Чем ниже температура выпечки, тем более гладкой получается текстура — без пузырей и «сыворотки».'},
+
+{id:2,s:'desserts',cat:'Классика',e:'☕',g:'g6',
+ chef:'Традиция (г. Тревизо)',t:'Тирамису',
+ orig:'🇮🇹 Тревизо · Ristorante Alle Beccherie',
+ desc:'Аутентичный тирамису без сливок — только маскарпоне, желтки, эспрессо и савоярди. Именно так в ресторане, где блюдо родилось.',
+ time:'4 ч',tt:'medium',diff:'Легко',srv:'8 порций',
+ ingr:['400 г савоярди','500 г маскарпоне','5 яиц','150 г сахара','400 мл эспрессо','50 мл амаретто','какао для посыпки'],
+ steps:['Желтки взбить с сахаром 5–7 мин до побеления и удвоения.','Добавить маскарпоне, перемешать до гладкости.','Белки взбить в жёсткую меренгу, аккуратно вмешать в крем.','Окунуть савоярди в смесь кофе с ликёром — не дольше 1 секунды.','Чередовать слои печенья и крема. Охладить 4 ч. Посыпать какао через сито.'],
+ tip:'Одна секунда — не преувеличение. Размокшее печенье расплывётся, и тирамису потеряет форму при нарезке.'},
+
+{id:3,s:'desserts',cat:'Классика',e:'🍫',g:'g1',
+ chef:'Пьер Эрме',t:'Шоколадный мусс',
+ orig:'🇫🇷 Париж · Pierre Hermé',
+ desc:'Невесомый мусс из тёмного шоколада 70% — без желатина, только правильная техника с меренгой и температурой.',
+ time:'3 ч',tt:'medium',diff:'Средне',srv:'6 порций',
+ ingr:['200 г шоколада 70%','4 желтка','5 белков','30 г сахара','30 г сливочного масла','щепотка соли'],
+ steps:['Растопить шоколад с маслом на водяной бане. Охладить до 45°C.','Желтки по одному вмешать в шоколад.','Взбить белки с солью, затем с сахаром до жёстких пиков.','Треть меренги вмешать в шоколад (облегчить). Остальное — складывающими движениями.','Разлить по бокалам, охладить 2–3 часа.'],
+ tip:'Шоколад не должен быть горячим ни при добавлении желтков, ни при добавлении меренги — иначе первое свернётся, второе опадёт.'},
+
+{id:4,s:'desserts',cat:'Классика',e:'🍮',g:'g7',
+ chef:'Кулинарная традиция',t:'Pannacotta с ванилью',
+ orig:'🇮🇹 Пьемонт, Италия',
+ desc:'«Варёные сливки» — итальянский десерт, который дрожит при прикосновении и тает на языке. Кажется простым, но требует точности с желатином.',
+ time:'4 ч',tt:'medium',diff:'Легко',srv:'6 порций',
+ ingr:['500 мл сливок 33%','100 мл молока','80 г сахара','1 стручок ванили','10 г листового желатина','ягодный соус для подачи'],
+ steps:['Желатин замочить в холодной воде на 10 мин.','Нагреть сливки с молоком, сахаром и ванилью до 80°C.','Добавить отжатый желатин, растворить помешивая.','Процедить. Разлить по формочкам.','Охладить 4 часа. Подавать с ягодным соусом.'],
+ tip:'Слишком много желатина — резина. Правильная паннакотта дрожит как желе, но не держит форму блока.'},
+
+{id:5,s:'desserts',cat:'Суфле и горячие',e:'🎂',g:'g6',
+ chef:'Жоэль Робюшон',t:'Горячее шоколадное суфле',
+ orig:'🇫🇷 Париж · Jamin ★★★',
+ desc:'Великий подвиг французской кулинарии. Суфле ждёт гостей — не гости суфле. Подаётся немедленно после духовки.',
+ time:'45 мин',tt:'medium',diff:'Сложно',srv:'4 порции',
+ ingr:['200 г шоколада 66%','50 г масла','4 желтка','5 белков','80 г сахара','20 г муки','масло + сахар для форм'],
+ steps:['Смазать рамекины маслом, обсыпать сахаром равномерно.','Растопить шоколад с маслом. Добавить желтки и муку.','Взбить белки с сахаром до жёстких пиков.','Вмешать треть меренги в шоколад, затем остальное — складывающими движениями.','Заполнить формы на 3/4. Выпекать при 200°C ровно 12–14 мин. Подавать немедленно!'],
+ tip:'Суфле готово, когда края поднялись выше края формы и чуть потемнели. Внутри должно оставаться кремообразным.'},
+
+{id:6,s:'desserts',cat:'Суфле и горячие',e:'🫓',g:'g2',
+ chef:'Гордон Рамзи',t:'Брауни с жидкой серединой',
+ orig:'🇬🇧 Великобритания · Gordon Ramsay Restaurants',
+ desc:'Кажется брауни, но внутри — горячий шоколадный вулкан. Идеальный баланс между готовым и сырым. Самый эффектный финал ужина.',
+ time:'30 мин',tt:'quick',diff:'Легко',srv:'6 шт',
+ ingr:['200 г шоколада 70%','100 г масла','3 яйца + 3 желтка','120 г сахарной пудры','30 г муки','какао для посыпки'],
+ steps:['Растопить шоколад с маслом, охладить.','Взбить яйца с желтками и пудрой 3 минуты.','Добавить шоколадную смесь. Всыпать муку, перемешать.','Разлить по смазанным формочкам. Убрать в холодильник.','Выпекать при 180°C 12 мин (из холодильника). Перевернуть на тарелку и подать немедленно.'],
+ tip:'Можно хранить готовые формочки в холодильнике до 2 суток. Выпекать прямо перед подачей.'},
+
+{id:7,s:'desserts',cat:'Торты',e:'🍰',g:'g7',
+ chef:'Гастон Ленотр',t:'Торт «Опера»',
+ orig:'🇫🇷 Париж · Dalloyau',
+ desc:'Шедевр французской кондитерской — тончайшие слои бисквита «жоконд», пропитанного кофейным сиропом, кофейный масляный крем и ганаш.',
+ time:'6 ч',tt:'slow',diff:'Сложно',srv:'10 порций',
+ ingr:['6 яиц + 6 белков','200 г миндальной муки','200 г пудры','60 г муки','100 г масла','250 мл крепкого кофе + 100 г сахара (пропитка)','400 г масла (крем)','300 г шоколада','300 мл сливок'],
+ steps:['Бисквит: взбить яйца с пудрой и мукой миндальной. Вмешать муку и масло. Белки взбить отдельно, добавить.','Выпечь тонкие листы 6 мм при 220°C — 8 минут. Охладить.','Кофейный масляный крем: заварная основа + взбитое масло + эспрессо.','Ганаш: горячие сливки + тёмный шоколад.','Сборка: пропитанный бисквит → крем → бисквит → ганаш → бисквит → крем → зеркальная глазурь.'],
+ tip:'Каждый слой должен быть одинаковой толщины. «Опера» — это архитектура. При разрезе срез должен быть идеально ровным.'},
+
+{id:8,s:'desserts',cat:'Торты',e:'🍫',g:'g1',
+ chef:'Отель «Захер», Вена',t:'Захертортe',
+ orig:'🇦🇹 Вена · Hotel Sacher, 1832',
+ desc:'Легендарный венский торт — плотный шоколадный бисквит с абрикосовым джемом под зеркальной шоколадной глазурью. Рецепт охраняется как государственная тайна.',
+ time:'4 ч',tt:'medium',diff:'Средне',srv:'10 порций',
+ ingr:['130 г шоколада 70%','130 г масла','100 г сахарной пудры','6 яиц (разделить)','120 г сахара','150 г муки','200 г абрикосового джема','200 г шоколада + 150 г сахара + 125 мл воды (глазурь)'],
+ steps:['Растопить шоколад с маслом. Взбить с пудрой и желтками.','Белки взбить с сахаром в жёсткую меренгу, вмешать в шоколадную массу.','Добавить муку складывающими движениями. Выпекать при 180°C 55–60 мин.','Охладить, разрезать пополам. Оба слоя и бока покрыть растопленным джемом.','Сварить шоколадную глазурь до 105°C, залить торт. Дать застыть.'],
+ tip:'Настоящий «Захер» — это абрикосовый джем снаружи, а не внутри. Глазурь должна быть матово-блестящей, а не пузырчатой.'},
+
+{id:9,s:'desserts',cat:'Торты',e:'🍓',g:'g7',
+ chef:'Эрик Ланар',t:'Клубничный торт «Фрезье»',
+ orig:'🇫🇷 Париж · Кондитерская классика',
+ desc:'Французский клубничный торт — бисквит «женуаз», крем «муслин» и разрезанные ягоды клубники по бортику. Весна на тарелке.',
+ time:'5 ч',tt:'slow',diff:'Сложно',srv:'8 порций',
+ ingr:['4 яйца + 120 г сахара + 120 г муки (бисквит)','сахарный сироп + ликёр (пропитка)','500 мл молока','5 желтков','120 г сахара','50 г крахмала','300 г масла (крем)','400 г клубники','ваниль'],
+ steps:['Женуаз: яйца с сахаром взбить на водяной бане до 40°C, взбивать до утроения. Вмешать муку.','Крем «муслин»: заварной крем охладить, взбить масло, постепенно вмешать крем.','Пропитать бисквит сиропом.','Клубнику разрезать пополам, выложить срезом к бортику формы. Заполнить кремом и целыми ягодами.','Накрыть вторым бисквитом. Охладить 3 ч. Покрыть зеркальным желе и украсить.'],
+ tip:'Клубника должна быть одного размера и очень спелой — иначе паттерн по бортику не получится правильным.'},
+
+{id:10,s:'desserts',cat:'Пирожные',e:'🍩',g:'g7',
+ chef:'Кристоф Адам',t:'Шоколадные эклеры',
+ orig:'🇫🇷 Париж · L\'Éclair de Génie',
+ desc:'Эклеры от лучшего специалиста по заварному тесту — хрустящая оболочка, шёлковый шоколадный крем, зеркальная ганашевая глазурь.',
+ time:'2 ч',tt:'medium',diff:'Средне',srv:'14–16 шт',
+ ingr:['250 мл воды','100 г масла','130 г муки','4 яйца','щепотка соли','500 мл молока','5 желтков','120 г сахара','40 г крахмала','200 г шоколада 66%','100 мл сливок'],
+ steps:['Заварное тесто: вскипятить воду с маслом и солью, всыпать муку, вымесить на огне. По одному вбить яйца.','Отсадить полоски 12 см. Выпекать при 200°C 28–30 мин. Не открывать духовку!','Шоколадный крем: заварить желтки с сахаром и крахмалом на молоке. Вмешать шоколад. Охладить.','Наполнить эклеры кремом через отверстие снизу.','Ганаш: горячие сливки + шоколад. Окунуть верх эклеров. Охладить 30 мин.'],
+ tip:'Не открывайте духовку первые 20 минут — иначе эклеры осядут. Пустой звук при постукивании = готово.'},
+
+{id:11,s:'desserts',cat:'Пирожные',e:'🥐',g:'g2',
+ chef:'Мориц Фромаж',t:'Пари-Брест с ореховым кремом',
+ orig:'🇫🇷 Париж · Традиционный, 1910',
+ desc:'Заварное кольцо в форме велосипедного колеса с пралине-кремом. Создано в честь гонки Париж–Брест — хруст снаружи и бархатистый ореховый крем внутри.',
+ time:'3 ч',tt:'medium',diff:'Средне',srv:'8 порций',
+ ingr:['250 мл воды','100 г масла','130 г муки','4 яйца','50 г миндальных лепестков','500 мл молока','5 желтков','120 г сахара','50 г крахмала','200 г пралине','300 г масла (крем)'],
+ steps:['Заварное тесто приготовить стандартно. Отсадить кольцо диаметром 24–26 см.','Посыпать миндальными лепестками. Выпекать при 200°C 35–40 мин.','Крем «муслин»: заварной крем + взбитое масло + пралине. Взбить до пышности.','Кольцо разрезать горизонтально пополам.','Нижнюю часть наполнить кремом из мешка. Накрыть верхом, посыпать пудрой.'],
+ tip:'Пралине: поджаренный фундук в карамели, охладить, взбить блендером до пасты. Или купить готовое.'},
+
+{id:12,s:'desserts',cat:'Печенье',e:'🍪',g:'g2',
+ chef:'Жак Торрес',t:'Шоколадное печенье (72 ч в холодильнике)',
+ orig:'🇺🇸 Нью-Йорк · Jacques Torres Chocolate',
+ desc:'Самое известное шоколадное печенье — тесто выдерживается 72 часа в холодильнике для глубокого карамельного вкуса. Хрустящий край, тягучий центр.',
+ time:'72 ч + 20 мин',tt:'days',diff:'Легко',srv:'18–24 шт',
+ ingr:['285 г хлебной муки','285 г муки "00"','1.25 ч.л. соды','1.5 ч.л. соли','280 г мягкого масла','225 г коричневого сахара','225 г белого сахара','2 яйца + 2 желтка','2 ч.л. ванили','600 г шоколада 60%+','морская соль крупная'],
+ steps:['Взбить масло с обоими видами сахара добела.','Добавить яйца, желтки и ваниль, взбивать 2 мин.','Вмешать муку с содой и солью. Добавить шоколад кусочками.','Накрыть плёнкой, убрать в холодильник на 24–72 часа.','Сформировать шарики по 50–60 г, посыпать морской солью. Выпекать при 165°C 18–20 мин.'],
+ tip:'72 часа — это ферментация, которая высушивает тесто и создаёт ореховый вкус через реакцию Майяра. Торрес настаивает: меньше — не то.'},
+
+{id:13,s:'desserts',cat:'Печенье',e:'🧁',g:'g7',
+ chef:'Джеймс Оливер',t:'Маффины с черникой',
+ orig:'🇬🇧 Великобритания · Jamie\'s Kitchen',
+ desc:'Воздушные маффины с черникой и лимонной цедрой от Джеймса Оливера — готовятся за полчаса и не требуют миксера.',
+ time:'30 мин',tt:'quick',diff:'Легко',srv:'12 шт',
+ ingr:['300 г муки','2 ч.л. разрыхлителя','150 г сахара','2 яйца','150 мл молока','100 мл растительного масла','200 г черники','цедра 1 лимона','щепотка соли','ваниль'],
+ steps:['Смешать сухие ингредиенты в одной миске.','В другой — яйца, молоко, масло, цедру и ваниль.','Объединить обе смеси несколькими движениями — тесто должно оставаться немного комковатым.','Добавить чернику, аккуратно перемешать.','Разложить по формочкам до 3/4, выпекать при 190°C 22–25 мин.'],
+ tip:'Не мешайте тесто долго — именно комки дают воздушность. Перемешанное тесто = плотный маффин.'},
+
+{id:14,s:'desserts',cat:'Холодные',e:'🍧',g:'g5',
+ chef:'Дэвид Лебовиц',t:'Домашнее мороженое с ванилью',
+ orig:'🇺🇸 Париж · «Совершенный шарик»',
+ desc:'Классическое французское мороженое crème anglaise — богатая яичная основа, взбитая до кремовой текстуры. Меняет представление о домашнем мороженом.',
+ time:'6 ч',tt:'slow',diff:'Средне',srv:'1 литр',
+ ingr:['500 мл жирных сливок','250 мл молока','5 желтков','150 г сахара','2 стручка ванили','щепотка соли'],
+ steps:['Нагреть молоко с ванилью до 80°C, настоять 30 мин.','Желтки взбить с сахаром добела. Тонкой струйкой влить горячее молоко.','Варить на слабом огне, помешивая, до 82–84°C — крем покрывает ложку.','Добавить холодные сливки. Охладить в воде со льдом.','Поместить в мороженицу. Или заморозить, взбивая каждые 30 мин.'],
+ tip:'Температура 82–84°C — это зона пастеризации. Ниже — жидко, выше — свернётся.'},
+
+{id:15,s:'desserts',cat:'Холодные',e:'🫐',g:'g6',
+ chef:'Хестон Блюменталь',t:'Чизкейк без выпечки',
+ orig:'🇬🇧 Великобритания · Heston\'s Home Kitchen',
+ desc:'Нью-йоркский чизкейк без духовки — на основе из пряного печенья, с бархатным сырным кремом и ягодным компоте сверху.',
+ time:'5 ч',tt:'slow',diff:'Легко',srv:'8 порций',
+ ingr:['250 г печенья (Digestive или Speculoos)','90 г растопленного масла','500 г сливочного сыра (Филадельфия)','150 г сахарной пудры','300 мл сливок 33%','2 ч.л. желатина + 3 ст.л. воды','цедра и сок лимона','ягоды для подачи'],
+ steps:['Измельчить печенье, смешать с маслом. Утрамбовать в форму (d=22 см), охладить 20 мин.','Желатин замочить в воде на 10 мин, распустить на слабом огне.','Сыр взбить с пудрой и лимоном. Добавить остывший желатин.','Отдельно взбить сливки до пиков, аккуратно вмешать в сырную массу.','Вылить на основу, разровнять. Охладить 4–5 часов. Украсить ягодами.'],
+ tip:'Желатина не должно быть много — чизкейк должен слегка трястись, а не стоять как монолит.'},
+
+{id:16,s:'desserts',cat:'Классика',e:'🥧',g:'g7',
+ chef:'Джеймс Оливер',t:'Яблочный пирог с корицей',
+ orig:'🇬🇧 Великобритания · Jamie\'s Comfort Food',
+ desc:'Классический яблочный пай от Джеймса Оливера с ароматной начинкой, слоёным верхом и решёткой. «Вкус детства» в исполнении мастера.',
+ time:'2 ч',tt:'medium',diff:'Средне',srv:'8 порций',
+ ingr:['300 г муки','150 г холодного масла','60 г сахара','2 яйца','1 кг яблок','150 г коричневого сахара','2 ч.л. корицы','щепотка мускатного ореха','сок лимона','1 яйцо (смазка)'],
+ steps:['Песочное тесто: масло с мукой в крошку, добавить сахар и яйца. Собрать, охладить 30 мин.','Яблоки очистить, нарезать, смешать с сахаром, корицей, мускатом и лимоном.','Раскатать 2/3 теста, выложить в форму, наколоть вилкой.','Выложить начинку горкой. Накрыть оставшимся тестом или сделать решётку.','Смазать яйцом, посыпать сахаром. Выпекать при 190°C 40–45 мин.'],
+ tip:'Оливер добавляет немного тёмного рома в начинку. Это делает вкус яблок глубже.'},
+
+// ─────────────── ПАСТА ───────────────
+{id:17,s:'pasta',cat:'Классика Рима',e:'🍝',g:'g3',
+ chef:'Антонио Карлуччо',t:'Спагетти карбонара',
+ orig:'🇮🇹 Рим · «Полная итальянская еда»',
+ desc:'Настоящая карбонара — только гуанчале, яйца, Pecorino Romano и перец. Никаких сливок. Никакого лука. Священная римская классика.',
+ time:'25 мин',tt:'quick',diff:'Средне',srv:'2 порции',
+ ingr:['200 г спагетти','150 г гуанчале (или панчетты)','3 желтка + 1 яйцо','80 г Pecorino Romano','40 г пармезана','чёрный перец крупного помола','соль для воды'],
+ steps:['Гуанчале нарезать кубиками, обжарить без масла до хруста. Убрать с огня.','Смешать желтки, яйцо, тёртый сыр и щедрый чёрный перец.','Спагетти сварить al dente. Отлить 200 мл крахмалистой воды.','Горячие спагетти — к гуанчале (огонь выключен!). Влить яичный крем, мешать.','Добавлять воду по 1–2 ст.л. до шёлковой консистенции без комков.'],
+ tip:'Огонь выключен при добавлении яиц — это не омлет. Тепло от пасты и сковороды — ровно то, что нужно.'},
+
+{id:18,s:'pasta',cat:'Классика Рима',e:'🧀',g:'g3',
+ chef:'Тонино Валерини',t:'Паста Качо-э-Пепе',
+ orig:'🇮🇹 Рим · Trattoria Da Valentino',
+ desc:'Три ингредиента — паста, Pecorino, перец. Кажется простым, но шёлковый соус без единой капли сливок — чистое кулинарное искусство.',
+ time:'20 мин',tt:'quick',diff:'Средне',srv:'2 порции',
+ ingr:['200 г тонкерелли или сфинь','100 г Pecorino Romano','30 г пармезана','2 ч.л. чёрного перца крупного помола','соль для воды'],
+ steps:['Поджарить перец на сухой сковороде 30 сек. Залить 200 мл воды, вскипятить.','Сварить пасту в подсоленной воде до полуготовности, перенести в сковороду.','Довести до готовности al dente, постепенно добавляя крахмалистую воду.','Снять с огня. Добавить сыр, интенсивно мешая — образуется кремовая эмульсия.','Подавать немедленно, украсив дополнительным перцем.'],
+ tip:'Сыр добавляется при 65°C — выше температура, и он свернётся комками. Крахмалистая вода — клей, держащий соус.'},
+
+{id:19,s:'pasta',cat:'Классика Рима',e:'🍅',g:'g1',
+ chef:'Джино Д\'Акампо',t:'Спагетти Аматричана',
+ orig:'🇮🇹 Аматриче, Лацио · Традиционный',
+ desc:'Паста с гуанчале в остром томатном соусе с Pecorino Romano. Блюдо городка Аматриче имеет статус «PAT» — традиционного итальянского продукта.',
+ time:'30 мин',tt:'quick',diff:'Легко',srv:'4 порции',
+ ingr:['400 г букатини','200 г гуанчале','400 г томатов San Marzano','100 г Pecorino Romano','2 перца пепперончино','100 мл белого вина','соль, перец'],
+ steps:['Гуанчале нарезать полосками, обжарить до хруста.','Влить белое вино, выпарить. Добавить перец.','Добавить томатное пюре, тушить 15 мин до загустения.','Сварить букатини al dente, смешать с соусом.','Снять с огня, добавить тёртый Pecorino, перемешать.'],
+ tip:'В классической аматричане нет лука, нет чеснока, нет оливок. Любые добавки — это уже другое блюдо.'},
+
+{id:20,s:'pasta',cat:'Болонья',e:'🥩',g:'g1',
+ chef:'Массимо Боттура',t:'Тальятелле с болоньезе',
+ orig:'🇮🇹 Болонья · Osteria Francescana ★★★',
+ desc:'Официальный рецепт болонского рагу — говядина и свинина, тушёная в молоке и белом вине 4 часа. Только яичные тальятелле, никаких спагетти.',
+ time:'5 ч',tt:'slow',diff:'Средне',srv:'4–6 порций',
+ ingr:['300 г говяжьего фарша','150 г свиного фарша','1 луковица','1 морковь','2 стебля сельдерея','150 мл белого сухого вина','200 мл цельного молока','400 г томатов','50 г масла','мускатный орех','400 г яичных тальятелле (свежих)'],
+ steps:['Мелко нарезать лук, морковь, сельдерей. Обжарить в масле 15 мин до мягкости.','Добавить фарш, жарить на сильном огне до коричневого цвета, разбивая.','Влить вино, выпарить. Добавить молоко, тушить до поглощения.','Добавить томаты и мускат. Тушить на минимальном огне 3–4 часа.','Смешать с тальятелле al dente, добавить пармезан.'],
+ tip:'«Настоящий болоньезе не густой и не томатный. Он почти нежный и молочный» — Боттура. Молоко — главный секрет.'},
+
+{id:21,s:'pasta',cat:'Болонья',e:'🫙',g:'g1',
+ chef:'Дженнаро Контальдо',t:'Лазанья по-неаполитански',
+ orig:'🇮🇹 Неаполь · «Искренняя итальянская»',
+ desc:'Лазанья с неаполитанским рагу, бешамелью и моцареллой — не менее 5 слоёв. Приготовление занимает весь день, и это того стоит.',
+ time:'6 ч',tt:'slow',diff:'Сложно',srv:'8–10 порций',
+ ingr:['500 г листов лазаньи (свежих)','500 г говяжьего фарша','200 г свиных колбасок','800 г томатного пюре','500 мл молока','50 г муки + 50 г масла (бешамель)','300 г моцареллы','100 г пармезана','лук, чеснок, базилик'],
+ steps:['Рагу: лук + чеснок → фарш + колбаска → томаты. Тушить 2–3 ч.','Бешамель: масло + мука + тёплое молоко → варить до загустения. Мускат, соль.','Форма → бешамель → лист → рагу → моцарелла → пармезан. Повторить 5–6 раз.','Последний слой: только бешамель + пармезан.','Выпекать при 190°C 40–45 мин. Дать отдохнуть 20 мин перед нарезкой.'],
+ tip:'Лазанья лучше на следующий день — слои «слипаются» и вкус глубже. Готовьте накануне.'},
+
+{id:22,s:'pasta',cat:'Равиоли и другие',e:'🥟',g:'g4',
+ chef:'Джорджо Лока',t:'Равиоли со шпинатом и рикоттой',
+ orig:'🇮🇹 Пьемонт · Giorgio Locatelli',
+ desc:'Равиоли с начинкой из рикотты и шпината в классическом соусе из коричневого масла и шалфея — самое простое совершенство итальянской кухни.',
+ time:'2 ч',tt:'medium',diff:'Средне',srv:'4 порции',
+ ingr:['300 г муки "00"','3 яйца + 1 желток','1 ст.л. оливкового масла','300 г рикотты','200 г шпината (бланш)','50 г пармезана','мускатный орех','100 г масла (соус)','10 листьев шалфея'],
+ steps:['Тесто: замесить до гладкости, обернуть, отдых 30 мин.','Шпинат отжать, нарубить. Смешать с рикоттой, сыром и мускатом.','Раскатать тесто тонко. Выложить начинку, накрыть вторым слоем, вырезать равиоли.','Варить в подсоленной воде 3–4 мин.','Коричневое масло: жарить до золота, добавить шалфей на 30 сек. Полить равиоли.'],
+ tip:'Тесто для пасты должно «отдохнуть» — только тогда глютен расслабляется и не рвётся при раскатке.'},
+
+{id:23,s:'pasta',cat:'Равиоли и другие',e:'🍜',g:'g4',
+ chef:'Дженнаро Контальдо',t:'Тортеллини в бульоне',
+ orig:'🇮🇹 Болонья · Рождественский рецепт',
+ desc:'Крошечные тортеллини с мясной начинкой в тончайшем каплуновом бульоне — рождественское блюдо Болоньи, требующее двух дней и большой любви.',
+ time:'2 дня',tt:'days',diff:'Сложно',srv:'6 порций',
+ ingr:['300 г муки "00" + 3 яйца (тесто)','100 г свиной вырезки','50 г прошутто','50 г мортаделлы','50 г пармезана + мускат + 1 яйцо (начинка)','2 кг говяжьих костей','2 моркови + 2 луковицы + сельдерей (бульон)'],
+ steps:['День 1 — бульон: кости варить 4–5 часов медленно, снимая пену. Процедить.','Начинка: обжарить свинину, измельчить с ветчиной и мортаделлой. Смешать с сыром и яйцом.','Раскатать тесто тонко. Нарезать квадраты 3×3 см. Выложить начинку, сложить треугольником, обернуть вокруг пальца.','При желании — заморозить на ночь.','Варить в кипящем бульоне 3–4 мин. Подавать в горячем бульоне с пармезаном.'],
+ tip:'Бульон должен быть прозрачным как слеза — никакого бурления, только медленное томление.'},
+
+{id:24,s:'pasta',cat:'Запечённые',e:'🧀',g:'g2',
+ chef:'Найджела Лоусон',t:'Макароны с сыром Ultimate',
+ orig:'🇺🇸/🇬🇧 · «Как стать богиней кухни»',
+ desc:'Самый культовый Mac & Cheese — соус Морнэ с четырьмя видами сыра и хрустящей панировочной корочкой. Американский comfort food в исполнении Найджелы.',
+ time:'50 мин',tt:'medium',diff:'Легко',srv:'6 порций',
+ ingr:['400 г пасты пенне','50 г масла','50 г муки','700 мл молока','200 г чеддера','100 г грюйера','50 г пармезана','1 ч.л. дижонской горчицы','мускат','панировочные сухари + масло'],
+ steps:['Пасту отварить на 2 мин меньше готовности.','Соус: масло + мука + молоко → густая смесь. Снять с огня.','Добавить горчицу, мускат и все сыры. Перемешать.','Смешать пасту с соусом, выложить в форму.','Посыпать сухарями с маслом, выпекать при 200°C 25–30 мин до золота.'],
+ tip:'Чем больше видов сыра — тем интереснее. Добавьте копчёный чеддер или пармезан — глубина вкуса меняется кардинально.'},
+
+{id:25,s:'pasta',cat:'Запечённые',e:'🍅',g:'g1',
+ chef:'Джеймс Оливер',t:'Паста аль фурно с баклажаном',
+ orig:'🇮🇹/🇬🇧 Сицилия / Великобритания · Jamie Cooks Italy',
+ desc:'Запечённая паста с запечёнными баклажанами, рикоттой и густым томатным соусом — сицилийская традиция в любящих руках Оливера.',
+ time:'1.5 ч',tt:'medium',diff:'Легко',srv:'6 порций',
+ ingr:['400 г пасты ригатони','2 баклажана','600 г томатного пюре','1 луковица','4 зубчика чеснока','250 г рикотты','100 г пармезана','базилик','оливковое масло','соль, перец, чили'],
+ steps:['Баклажаны нарезать кубиками, запечь при 220°C 25 мин до румяности.','Соус: лук + чеснок → томаты → базилик → тушить 20 мин.','Сварить ригатони al dente.','Смешать пасту, соус, баклажаны и половину рикотты.','Выложить в форму. Сверху — рикотта + пармезан. Запекать при 200°C 20–25 мин.'],
+ tip:'Оливер советует запечь баклажан хорошо — подгоревшие края дают дымный вкус, который украшает всё блюдо.'},
+
+{id:26,s:'pasta',cat:'Другие соусы',e:'🫒',g:'g4',
+ chef:'Стэнли Туччи',t:'Спагетти с чесноком и маслом',
+ orig:'🇮🇹 Неаполь · Традиционный',
+ desc:'Aglio e Olio — самая простая паста мира. Но делать её идеально умеют единицы. Ключ — эмульсия из масла и крахмалистой воды.',
+ time:'15 мин',tt:'quick',diff:'Легко',srv:'2 порции',
+ ingr:['200 г спагетти','6–8 зубчиков чеснока (тонко)','100 мл оливкового масла Extra Virgin','1 перец пепперончино','свежая петрушка','соль'],
+ steps:['Варить спагетти, отлить 300 мл воды.','Медленно прогреть масло с чесноком — только светло-золотой, не коричневый.','Добавить пепперончино. Убрать с огня.','Добавить 100–150 мл воды от пасты, взбить — эмульсия.','Горячие спагетти в соус, перемешать с петрушкой.'],
+ tip:'Пережаренный чеснок горчит и испортит всё блюдо. Только светло-золотой. Только медленный огонь.'},
+
+{id:27,s:'pasta',cat:'Другие соусы',e:'🌿',g:'g4',
+ chef:'Джеймс Оливер',t:'Паста с песто alla Genovese',
+ orig:'🇮🇹 Генуя · Jamie\'s Italy',
+ desc:'Аутентичное песто из Генуи — базилик, кедровые орехи, пармезан и оливковое масло, растёртые в ступке. Никакого блендера.',
+ time:'20 мин',tt:'quick',diff:'Легко',srv:'4 порции',
+ ingr:['400 г трофие или лингвине','большой пучок базилика (50 г листьев)','30 г кедровых орехов (поджаренных)','50 г пармезана','30 г Pecorino','2 зубчика чеснока','100–120 мл оливкового масла','соль'],
+ steps:['В ступке растереть чеснок с солью до пасты.','Добавить орехи, растереть. Добавить базилик порциями.','Вмешать тёртые сыры. Влить масло по ст.л., перемешивая.','Сварить пасту al dente, отлить 100 мл воды.','Смешать пасту с песто, добавляя пасту воду для консистенции.'],
+ tip:'Блендер разогревает базилик и окисляет масло — песто темнеет и теряет аромат. Ступка сохраняет цвет и вкус.'},
+
+// ─────────────── ВЫПЕЧКА ───────────────
+{id:28,s:'baking',cat:'Хлеб',e:'🍞',g:'g3',
+ chef:'Чад Робертсон',t:'Хлеб на закваске Тартин',
+ orig:'🇺🇸 Сан-Франциско · Tartine Bakery',
+ desc:'Идеальный ремесленный хлеб — хрустящая корочка, открытый мякиш. Требует живую закваску и терпение, но результат меняет всё.',
+ time:'2–3 дня',tt:'days',diff:'Сложно',srv:'1 буханка',
+ ingr:['450 г хлебной муки','50 г цельнозерновой муки','375 мл воды 25°C','100 г зрелой закваски','10 г соли','для закваски: ржаная мука + вода'],
+ steps:['День 1: покормить закваску (50 г старт + 100 г муки + 100 г воды). Готова через 4–5 ч.','Смешать муку с водой (аутолиз 30 мин). Добавить закваску и соль.','Складывание каждые 30 мин × 4 раза. Брожение 3–4 ч при 26°C.','Сформировать, поместить в корзину, убрать в холодильник на ночь.','Выпекать в чугунной кастрюле при 260°C: 20 мин под крышкой, 25 мин без. Охладить 2 ч перед нарезкой.'],
+ tip:'Хлеб нельзя разрезать горячим — внутри идёт финальная «допечка» от остаточного тепла. Терпение!'},
+
+{id:29,s:'baking',cat:'Хлеб',e:'🥖',g:'g3',
+ chef:'Эрик Кайзер',t:'Классический французский багет',
+ orig:'🇫🇷 Париж · Maison Kayser',
+ desc:'Парижский багет — ЮНЕСКО внесло традицию его выпечки в список нематериального наследия. Хрустящая корочка, воздушный мякиш, мучная корочка.',
+ time:'6 ч',tt:'medium',diff:'Средне',srv:'3–4 багета',
+ ingr:['500 г муки T65 (хлебная)','10 г соли','5 г сухих дрожжей','320–330 мл воды 18°C'],
+ steps:['Растворить дрожжи в воде, добавить муку и соль. Замесить 8–10 мин.','Брожение 2 ч при 22°C с двумя складываниями через 45 мин.','Разделить на 200–250 г. Сформировать багеты, натягивая тесто.','Расстойка 45–60 мин под влажной тканью.','Надрезать косыми разрезами. Выпекать с паром при 240°C 22–25 мин.'],
+ tip:'Пар в духовке — обязателен для хрустящей корочки. Поставьте миску с кипятком на нижний уровень.'},
+
+{id:30,s:'baking',cat:'Хлеб',e:'🍞',g:'g2',
+ chef:'Джим Лэйи',t:'Хлеб без замеса (No-Knead)',
+ orig:'🇺🇸 Нью-Йорк · Sullivan Street Bakery',
+ desc:'Рецепт, изменивший домашнюю выпечку — хлеб с открытым мякишем и хрустящей корочкой без единого замеса. Минимум усилий, максимум результата.',
+ time:'14–18 ч',tt:'overnight',diff:'Легко',srv:'1 буханка',
+ ingr:['430 г муки','1/4 ч.л. сухих дрожжей','1.5 ч.л. соли','345 мл воды комнатной температуры'],
+ steps:['Смешать всё деревянной ложкой — тесто будет лохматым и липким.','Накрыть плёнкой, оставить 12–18 ч при комнатной температуре.','Тесто покроется пузырями. Сложить 2 раза, отдых 15 мин.','Сформировать шар, расстойка 2 ч на ткани с мукой.','Выпекать в раскалённой чугунной кастрюле при 230°C: 30 мин закрыто, 15 мин открыто.'],
+ tip:'Чугунная кастрюля создаёт эффект пекарского камня и пара одновременно. Это и есть весь секрет.'},
+
+{id:31,s:'baking',cat:'Хлеб',e:'🫓',g:'g3',
+ chef:'Джеймс Оливер',t:'Фокачча с розмарином',
+ orig:'🇮🇹/🇬🇧 Лигурия / Великобритания · Jamie\'s Italy',
+ desc:'Фокачча Оливера — пышная, маслянистая, с хрустящим низом и ароматными ямочками. Готовится за полтора часа.',
+ time:'1.5 ч',tt:'medium',diff:'Легко',srv:'6–8 порций',
+ ingr:['500 г хлебной муки (или обычной пшеничной высшего сорта)','380 мл тёплой воды (35–38°C)','7 г сухих быстрых дрожжей','1.5 ч.л. соли','1 ч.л. мёда или сахара','6 ст.л. оливкового масла Extra Virgin (3 в тесто + 3 в форму)','крупная морская соль для посыпки','свежий розмарин'],
+ steps:['Растворить дрожжи и мёд в 380 мл тёплой воды, подождать 10 минут — появится пена.','Смешать муку и соль в большой миске. Влить дрожжевую воду и 3 ст.л. масла. Перемешать ложкой до однородности — тесто будет ЛИПКИМ, это нормально для фокаччи. Не добавляйте муку.','Накрыть миску плёнкой и убрать в тёплое место на 1–1.5 часа, пока тесто не удвоится.','Щедро смазать форму 30×20 см оставшимися 3 ст.л. масла. Вылить тесто в форму — оно растечётся само.','Смочить руки ВОДОЙ или смазать маслом. Растянуть тесто по форме. Если не тянется — подождать 10 минут и повторить. Накрыть и дать постоять ещё 30 минут.','Разогреть духовку до 230°C. Смоченными в масле пальцами сделать глубокие ямки по всему тесту. Полить тонкой струйкой масла поверх, посыпать крупной солью и розмарином.','Выпекать 22–25 минут до золотистой румяной корочки. Готовая фокачча хрустит снизу и мягкая внутри.'],
+ tip:'Тесто фокаччи должно быть ЛИПКИМ — это не ошибка, так и надо. Добавлять муку не нужно. Работайте мокрыми или смазанными маслом руками. Ямочки делайте уверенно, до самого дна формы — они собирают масло и дают характерную хрустящую-мягкую текстуру.'},
+
+{id:32,s:'baking',cat:'Сдоба',e:'🥐',g:'g2',
+ chef:'Пьер Эрме',t:'Масляный круассан',
+ orig:'🇫🇷 Париж · Pierre Hermé',
+ desc:'Идеальный круассан — 36 слоёв, хруст при укусе, сливочное таяние внутри. Занимает два дня, но результат оправдывает каждую минуту.',
+ time:'2 дня',tt:'days',diff:'Сложно',srv:'12 шт',
+ ingr:['500 г хлебной муки','10 г соли','80 г сахара','10 г сухих дрожжей','300 мл холодного молока','30 г масла (в тесто)','250 г несолёного масла (для складывания)','2 яйца для смазки'],
+ steps:['День 1: замесить détrempe, убрать в холодильник на ночь.','День 2: масло расплющить в квадрат. Завернуть в тесто конвертом, раскатать.','Три складывания «буква» с охлаждением 30 мин между каждым.','Раскатать пласт 4 мм, нарезать треугольники, скрутить. Расстойка 2–3 ч.','Смазать яйцом дважды. Выпекать при 175°C 18–20 мин до глубокого золота.'],
+ tip:'Масло и тесто при складывании должны быть одинаково холодными и пластичными. Иначе — слои или рвутся, или масло впитывается.'},
+
+{id:33,s:'baking',cat:'Сдоба',e:'🧁',g:'g2',
+ chef:'Джеймс Оливер',t:'Булочки с корицей',
+ orig:'🇸🇪/🇬🇧 Скандинавия / Великобритания · Jamie\'s Comfort Food',
+ desc:'Мягкие булочки с коричневым сахаром и корицей, покрытые кремом из сливочного сыра. Рецепт Оливера — менее приторный, более ароматный.',
+ time:'3 ч',tt:'medium',diff:'Средне',srv:'12 шт',
+ ingr:['500 г муки','7 г дрожжей','200 мл тёплого молока','70 г сахара','80 г масла (тесто)','2 яйца','ваниль, соль','120 г коричневого сахара','2 ст.л. корицы','60 г мягкого масла (начинка)','200 г сливочного сыра + 150 г пудры + 50 г масла (крем)'],
+ steps:['Замесить тесто, дать подойти 1 ч.','Раскатать прямоугольником, смазать маслом, посыпать сахаром с корицей.','Плотно свернуть рулет, нарезать ломтями 4 см.','В форму. Расстойка 30–40 мин. Выпекать при 180°C 22–25 мин.','Покрыть тёплые булочки кремом из сыра, пудры и масла.'],
+ tip:'Оливер добавляет немного кардамона в начинку — скандинавская традиция, которая делает аромат многослойным.'},
+
+{id:34,s:'baking',cat:'Пироги',e:'🥧',g:'g9',
+ chef:'Пьер Эрме',t:'Лимонный тарт с меренгой',
+ orig:'🇫🇷 Париж · Pierre Hermé',
+ desc:'Лимонный тарт с итальянской меренгой — взрыв цитруса в хрустящей песочной корзиночке с нежным курдом и шёлковой меренгой, поджжённой горелкой.',
+ time:'4 ч',tt:'medium',diff:'Средне',srv:'8 порций',
+ ingr:['200 г муки + 100 г масла + 60 г пудры + 1 яйцо (тесто)','200 мл лимонного сока','4 яйца + 4 желтка','200 г сахара','150 г масла (курд)','цедра 3 лимонов','4 белка + 200 г сахара (меренга)'],
+ steps:['Тесто: замесить, охладить 30 мин. Выложить в форму, запечь «вслепую» при 180°C 20 мин.','Курд: смешать сок, цедру, яйца и сахар. Варить на водяной бане до загустения. Добавить масло.','Залить курд в остывшую основу. Охладить 2 ч.','Меренга: белки взбить, влить сироп 121°C тонкой струйкой. Взбивать до охлаждения.','Нанести меренгу, поджечь горелкой. Подавать сразу.'],
+ tip:'Итальянская меренга не оседает и безопаснее французской — кипящий сироп пастеризует белки.'},
+
+{id:35,s:'baking',cat:'Пироги',e:'🍎',g:'g9',
+ chef:'Сёстры Татен',t:'Перевёрнутый яблочный пирог',
+ orig:'🇫🇷 Солонь · Отель Татен, 1888',
+ desc:'Легендарная «ошибка» сестёр Татен — карамелизованные яблоки под хрустящим слоёным тестом. Случайное изобретение, изменившее историю кулинарии.',
+ time:'1.5 ч',tt:'medium',diff:'Средне',srv:'6–8 порций',
+ ingr:['8–10 яблок Голден или Рейнет','150 г сахара','80 г несолёного масла','1 ч.л. ванили','щепотка корицы','250 г слоёного теста'],
+ steps:['В чугунной сковороде растопить масло с сахаром до янтарной карамели.','Яблоки очистить, разрезать пополам. Выложить плотно срезом вниз в карамель.','Готовить на среднем огне 15–20 мин, пока яблоки не станут мягкими.','Накрыть тестом, заправив края под яблоки. Выпекать при 200°C 25–30 мин.','Перевернуть сразу из духовки! Подавать тёплым со взбитыми сливками.'],
+ tip:'Перевернуть нужно немедленно — пока карамель горячая. Подождёте — яблоки намертво приклеятся к сковороде.'},
+
+{id:36,s:'baking',cat:'Торты',e:'🎂',g:'g7',
+ chef:'Хестон Блюменталь',t:'Идеальный морковный торт',
+ orig:'🇬🇧 Великобритания · Heston\'s Home Kitchen',
+ desc:'Морковный торт с тёплыми специями и кремом из маскарпоне — увлажнённый, пряный, с хрустящими грецкими орехами.',
+ time:'2 ч',tt:'medium',diff:'Легко',srv:'10 порций',
+ ingr:['300 г муки','2 ч.л. разрыхлителя','1 ч.л. соды','2 ч.л. корицы','0.5 ч.л. муската','300 г тёртой моркови','250 г коричневого сахара','4 яйца','200 мл растительного масла','100 г грецких орехов','500 г маскарпоне + 150 г пудры + цедра апельсина (крем)'],
+ steps:['Смешать сухие ингредиенты. В другой миске — яйца, сахар и масло.','Объединить, добавить морковь и орехи.','Разделить тесто на 2 формы d=20 см. Выпекать при 180°C 30–35 мин.','Охладить полностью перед сборкой.','Крем: взбить маскарпоне с пудрой и цедрой. Прослоить и покрыть торт.'],
+ tip:'Блюменталь добавляет в крем немного имбирного сиропа — неожиданная нота, которая освежает тяжёлый кремовый вкус.'},
+
+// ─────────────── МЯСО ───────────────
+{id:37,s:'meat',cat:'Говядина',e:'🥩',g:'g1',
+ chef:'Гордон Рамзи',t:'Говядина Веллингтон',
+ orig:'🇬🇧 Великобритания · Gordon Ramsay Restaurants ★★★',
+ desc:'Говяжье филе в хрустящем слоёном тесте с грибным дюксель и пармской ветчиной — одно из самых зрелищных блюд мировой кухни.',
+ time:'3 ч + ночь',tt:'overnight',diff:'Сложно',srv:'4 порции',
+ ingr:['800 г говяжьего филе','500 г шампиньонов','8 слайсов пармской ветчины','500 г слоёного теста','2 ст.л. дижонской горчицы','2 желтка','2 блинчика','тимьян, соль, перец'],
+ steps:['Приправить филе, обжарить со всех сторон 1–2 мин. Смазать горчицей, завернуть в плёнку, убрать на ночь.','Грибы в блендер, выпарить 10–12 мин до абсолютно сухого дюкселя.','Ветчина + блинчик + дюксель + мясо → плотный рулет в плёнке. Охладить 20 мин.','Тесто → рулет, защипнуть. Смазать желтком, сделать насечку. Охладить 30 мин.','Выпекать при 210°C 18–22 мин (термометр: 52°C = medium rare). Отдых 10 мин.'],
+ tip:'Дюксель обязан быть абсолютно сухим — любая влага размочит тесто. Кладите Веллингтон швом вниз.'},
+
+{id:38,s:'meat',cat:'Говядина',e:'🍷',g:'g1',
+ chef:'Джулия Чайлд',t:'Бёф бургиньон',
+ orig:'🇫🇷 Бургундия · «Освоение искусства французской кухни»',
+ desc:'Классическое бургундское рагу — говядина в красном вине с жемчужным луком, беконом и грибами. Шедевр, сделавший Джулию Чайлд знаменитой.',
+ time:'5 ч',tt:'slow',diff:'Средне',srv:'6–8 порций',
+ ingr:['1.5 кг говяжьей лопатки','200 г бекона','750 мл бургундского вина','500 мл говяжьего бульона','250 г шампиньонов','200 г жемчужного лука','2 моркови + 1 луковица','2 ст.л. муки','2 ст.л. томатной пасты','букет гарни','50 мл коньяка'],
+ steps:['Обжарить бекон до хруста. В том же жиру обжарить мясо порциями до тёмной корочки.','Лук и морковь обжарить, вернуть мясо. Посыпать мукой. Томатная паста.','Коньяк (можно фламбировать), вино и бульон — так, чтобы покрыло мясо. Букет гарни.','Тушить при 160°C 3–3.5 ч, пока мясо не распадается от вилки.','Грибы и жемчужный лук обжарить отдельно, добавить за 30 мин до конца.'],
+ tip:'Рагу вкуснее на следующий день. Это не метафора — дайте ему настояться ночь.'},
+
+{id:39,s:'meat',cat:'Говядина',e:'🥩',g:'g2',
+ chef:'Хестон Блюменталь',t:'Стейк методом су-вид',
+ orig:'🇬🇧 Великобритания · The Fat Duck ★★★',
+ desc:'Абсолютно равномерная прожарка по всему стейку — техника sous vide, доведённая до совершенства. Внутри одна температура от края до края.',
+ time:'2–4 ч',tt:'medium',diff:'Средне',srv:'2 порции',
+ ingr:['2 рибай по 3–4 см','крупная соль, чёрный перец','3–4 ветки тимьяна','2 зубчика чеснока','50 г сливочного масла'],
+ steps:['Приправить стейки, поместить в вакуумный пакет с тимьяном и чесноком.','Готовить в воде при 57°C ровно 2–4 ч (для medium rare).','Достать, обсушить бумажным полотенцем — абсолютно насухо.','Раскалить чугунную сковороду добела. Жарить 1–1.5 мин с каждой стороны.','Добавить масло, чеснок, тимьян — поливать маслом (basting) 1 мин. Отдых 3 мин.'],
+ tip:'Перед обжаркой стейк должен быть идеально сухим — только тогда образуется корочка Майяра, а не пар.'},
+
+{id:40,s:'meat',cat:'Говядина',e:'🫕',g:'g1',
+ chef:'Томас Келлер',t:'Тушёные говяжьи рёбра',
+ orig:'🇺🇸 Напа · The French Laundry ★★★',
+ desc:'Говяжьи рёбра медленного тушения в красном вине — мясо буквально тает. Техника «конфи» от легендарного американского шефа.',
+ time:'7–8 ч',tt:'slow',diff:'Средне',srv:'4 порции',
+ ingr:['2 кг говяжьих рёбер','750 мл красного вина','500 мл говяжьего бульона','1 головка чеснока','2 моркови + 2 луковицы','розмарин, тимьян, лавр','2 ст.л. томатной пасты','соль, перец'],
+ steps:['Рёбра приправить, обжарить партиями до глубокой корочки. Убрать.','В том же сотейнике обжарить овощи, добавить томатную пасту, пассеровать 5 мин.','Влить вино, уварить наполовину. Добавить бульон и травы.','Вернуть рёбра — почти покрыть жидкостью.','Тушить при 150°C 5–6 ч. Уварить соус до густоты.'],
+ tip:'«Чем медленнее — тем лучше. 130°C на 8 часов — мой идеальный вариант» — Томас Келлер.'},
+
+{id:41,s:'meat',cat:'Свинина',e:'🐖',g:'g2',
+ chef:'Хестон Блюменталь',t:'Итальянский рулет из свинины (Porchetta)',
+ orig:'🇮🇹 Умбрия / 🇬🇧 Великобритания · The Fat Duck',
+ desc:'Свиная грудинка с чесноком, фенхелем и розмарином, свёрнутая в рулет. Медленное запекание даёт хрустящую шкурку «краклин» и нежное мясо.',
+ time:'3 ч + ночь',tt:'overnight',diff:'Средне',srv:'8 порций',
+ ingr:['2 кг свиной грудинки со шкурой','6 зубчиков чеснока','2 ст.л. семян фенхеля','2 ст.л. розмарина','цедра 2 лимонов','крупная соль, перец','оливковое масло'],
+ steps:['Шкуру надрезать ромбами, натереть солью. Мясо изнутри — смесь чеснока, трав, цедры, масла.','Свернуть рулетом, перевязать. Убрать в холодильник на ночь без накрытия.','Начать при 240°C 20 мин для хрустящей шкурки.','Снизить до 160°C, готовить ещё 2 ч. Внутри 72°C.','Отдых 30 мин. Нарезать толстыми ломтями.'],
+ tip:'Ночь без накрытия в холодильнике высушивает шкуру — именно это гарантирует хруст. Не пропускайте.'},
+
+{id:42,s:'meat',cat:'Птица',e:'🍗',g:'g4',
+ chef:'Томас Келлер',t:'Идеальная запечённая курица',
+ orig:'🇺🇸 Нью-Йорк · Per Se ★★★',
+ desc:'«Жареная курица — лучший способ оценить мастерство шефа» — Томас Келлер. Его метод прост и идеален одновременно.',
+ time:'1.5 ч',tt:'medium',diff:'Легко',srv:'4 порции',
+ ingr:['1 курица 1.5–2 кг','крупная морская соль','чёрный перец','2–3 ветки тимьяна','1 головка чеснока (пополам)','2 ст.л. масла','оливковое масло'],
+ steps:['Курицу обсушить — абсолютно. Щедро посолить за 45 мин до готовки.','Разогреть чугунную сковороду до 230°C.','Натереть маслом, связать ножки. Положить с тимьяном и чесноком.','Жарить при 230°C 50–60 мин, не открывая. Кожа — тёмно-золотая.','Проверить бедро (74°C). Отдых 15 мин перед нарезкой.'],
+ tip:'«Солите за час до запекания — это единственный способ добиться идеального вкуса и хрустящей кожи» — Томас Келлер.'},
+
+{id:43,s:'meat',cat:'Птица',e:'🍷',g:'g1',
+ chef:'Джулия Чайлд',t:'Курица в красном вине (Coq au Vin)',
+ orig:'🇫🇷 Бургундия · «Французский шеф»',
+ desc:'Курица, тушённая в красном вине с грибами, беконом и жемчужным луком — воплощение французской крестьянской кухни, поднятой до искусства.',
+ time:'3 ч',tt:'slow',diff:'Средне',srv:'4–6 порций',
+ ingr:['1 курица (8 частей)','750 мл красного вина','250 г бекона','250 г шампиньонов','200 г жемчужного лука','3 зубчика чеснока','2 ст.л. муки','250 мл бульона','коньяк 50 мл','букет гарни'],
+ steps:['Бекон обжарить до хруста. В том же жиру — куски курицы до золота.','Влить коньяк, фламбировать. Убрать мясо, обжарить чеснок и лук.','Посыпать мукой, добавить вино и бульон. Вернуть мясо и букет гарни.','Тушить при 160°C 1–1.5 ч.','Грибы обжарить отдельно, добавить к курице. Довести соус до густоты.'],
+ tip:'Не используйте дорогое вино. Джулия советовала молодой Пино Нуар. Основной вкус создаёт время, а не цена бутылки.'},
+
+{id:44,s:'meat',cat:'Птица',e:'🦆',g:'g6',
+ chef:'Жоэль Робюшон',t:'Утка конфи',
+ orig:'🇫🇷 Гасконь · L\'Atelier de Joël Robuchon ★★★',
+ desc:'Утиные ножки, приготовленные в собственном жиру при низкой температуре — древняя технология консервации, которая одновременно является кулинарным шедевром.',
+ time:'2 дня',tt:'days',diff:'Средне',srv:'4 порции',
+ ingr:['4 утиные ножки','30 г крупной соли','2 ч.л. чёрного перца','4 ветки тимьяна','2 лавровых листа','4 зубчика чеснока','700 г топлёного утиного жира'],
+ steps:['День 1: ножки натереть солью, перцем, тимьяном, чесноком. В холодильник на сутки.','День 2: смыть соль, обсушить. Растопить жир в глубокой форме.','Погрузить ножки в жир (должно покрывать). Готовить при 90°C 2.5–3 ч.','Охладить прямо в жиру.','Перед подачей: жарить кожей вниз 5–7 мин до абсолютного хруста.'],
+ tip:'Конфи хранится в жиру в холодильнике 3–4 недели. Именно так его заготавливали в Гаскони.'},
+
+{id:45,s:'meat',cat:'Баранина',e:'🍖',g:'g6',
+ chef:'Йотам Оттоленги',t:'Нога ягнёнка с гранатом',
+ orig:'🇮🇱 Иерусалим · «Оттоленги» ★',
+ desc:'Ближневосточный шедевр — нога ягнёнка в гранатовой мелассе и специях, медленно запечённая до нежности с хрустящими пряными корочками.',
+ time:'5 ч',tt:'slow',diff:'Средне',srv:'6 порций',
+ ingr:['2 кг ноги ягнёнка','4 ст.л. гранатовой мелассы','3 ст.л. оливкового масла','6 зубчиков чеснока','2 ч.л. куркумы + кумин + корица','цедра и сок лимона','соль, перец','зёрна граната, кориандр (подача)'],
+ steps:['Смешать мелассу, масло, чеснок и специи. Глубоко надрезать ногу, вмассировать маринад. Мариновать 2–12 ч.','Переложить в жаровню. Накрыть фольгой.','Запекать при 160°C 3–3.5 ч. Открыть, полить соком и запекать ещё 30 мин до карамелизации.','Мясо должно отходить от кости.','Подавать, украсив гранатом и кориандром, с питой или рисом.'],
+ tip:'Гранатовая меласса — концентрированный сироп, не сок. Ищите в магазинах ближневосточной кухни.'},
+
+// ─────────────── СУПЫ ───────────────
+{id:46,s:'soups',cat:'Французские',e:'🧅',g:'g6',
+ chef:'Джулия Чайлд',t:'Французский луковый суп',
+ orig:'🇫🇷 Париж · «Освоение искусства французской кухни»',
+ desc:'Золотистая карамелизованная луковая душа Парижа — с говяжьим бульоном, гренкой и расплавленным грюйером. Суп, который согревает изнутри.',
+ time:'1.5 ч',tt:'medium',diff:'Легко',srv:'4 порции',
+ ingr:['1.5 кг репчатого лука','60 г масла + 1 ст.л. оливкового','1 ч.л. сахара','200 мл сухого белого вина','1 л говяжьего бульона','50 мл коньяка','4 ломтика хлеба','200 г грюйера тёртого'],
+ steps:['Нарезать лук полукольцами. Обжарить в масле 15 мин, добавить сахар.','Карамелизовать 40–50 мин постоянно помешивая — до тёмно-коричневого цвета.','Коньяк → выпарить. Вино → выпарить.','Добавить бульон, тушить 20 мин. Приправить.','Разлить в жаропрочные миски. Гренка + щедрый слой грюйера. Под гриль до корочки.'],
+ tip:'Карамелизация лука — самый долгий шаг. Не торопитесь: именно за 45–50 мин лук отдаёт всю сладость.'},
+
+{id:47,s:'soups',cat:'Французские',e:'❄️',g:'g6',
+ chef:'Луи Дайа',t:'Вишисуаз (холодный суп из порея)',
+ orig:'🇫🇷 Париж / 🇺🇸 Нью-Йорк · Ritz Carlton, 1917',
+ desc:'Холодный бархатистый суп-пюре из порея и картофеля — изобретён французским шефом в Нью-Йорке. Элегантность в каждой ложке.',
+ time:'1.5 ч + охлаждение',tt:'medium',diff:'Легко',srv:'6 порций',
+ ingr:['600 г лука-порея (белая часть)','400 г картофеля','50 г масла','1 л куриного бульона','200 мл сливок 35%','соль, белый перец','мускат','шнитт-лук + икра (подача)'],
+ steps:['Порей нарезать, потушить в масле 10 мин.','Добавить картофель и бульон. Варить 20–25 мин.','Взбить блендером до абсолютной гладкости.','Протереть через сито. Добавить сливки, приправить.','Охладить 3–4 ч. Подавать холодным, украсив.'],
+ tip:'Сито обязательно — именно оно даёт бархатистую вишисуазовую текстуру. Блендер недостаточен.'},
+
+{id:48,s:'soups',cat:'Азиатские',e:'🍜',g:'g5',
+ chef:'Иван Оркин',t:'Токийский рамен',
+ orig:'🇯🇵 Токио · Ivan Ramen',
+ desc:'Американец, покоривший Токио своим раменом — двойной бульон, домашняя лапша, маринованное яйцо и три вида чашу.',
+ time:'2 дня',tt:'days',diff:'Сложно',srv:'4 порции',
+ ingr:['1.5 кг свиных костей + 1 курица (бульон)','конбу 20 г + кацуобуси 50 г (даши)','500 г свиной грудинки (чашу)','соевый соус, мирин, саке','400 г рамен-лапши','4 яйца (маринованных)','нори, менма, лук'],
+ steps:['День 1 — бульон тонкоцу: кости промыть, залить свежей водой. Варить 12 ч на сильном огне (должен быть мутно-белым).','Даши: конбу в холодной воде до 60°C. Добавить кацуобуси 2 мин. Процедить.','Чашу: грудинку свернуть рулетом. Тушить в соевом соусе, мирине и саке 3 ч.','Яйца варить 7 мин, мариновать в соусе от чашу 12 ч.','Бульон (тонкоцу + даши 1:1) + соевый tare → нарезанный чашу + лапша.'],
+ tip:'Тонкоцу кипятится на СИЛЬНОМ огне — именно кипение, а не томление, создаёт молочно-белый цвет.'},
+
+{id:49,s:'soups',cat:'Азиатские',e:'🍵',g:'g4',
+ chef:'Традиционный',t:'Фо Бо (вьетнамский суп)',
+ orig:'🇻🇳 Ханой · Традиционный рецепт',
+ desc:'Вьетнамский суп, который варят всю ночь — глубокий прозрачный бульон с обугленным луком, тонко нарезанной говядиной и рисовой лапшой.',
+ time:'10–12 ч',tt:'overnight',diff:'Средне',srv:'6 порций',
+ ingr:['2 кг говяжьих костей','500 г говяжьей голяшки','2 луковицы (целые) + 5 см имбиря','5 звёзд аниса + 3 гвоздики + кориандр + кардамон','рыбный соус','400 г рисовой лапши','200 г сырой говядины (тонко)','проростки, лайм, кинза, базилик, чили'],
+ steps:['Кости залить кипятком на 10 мин, слить — убирает примеси.','Лук и имбирь обжечь прямо над огнём до угольных пятен.','Кости + лук + имбирь + специи в марле → варить 8–12 ч.','Процедить, приправить рыбным соусом. Янтарно-прозрачный бульон.','Миска: лапша → сырая говядина → кипящий бульон → свежая зелень.'],
+ tip:'Обугленный лук и имбирь — именно это отличает фо от просто говяжьего бульона. Не пропускайте.'},
+
+{id:50,s:'soups',cat:'Кремовые',e:'🍅',g:'g1',
+ chef:'Ферран Адриа',t:'Испанский гаспачо',
+ orig:'🇪🇸 Андалусия · elBulli ★★★',
+ desc:'Холодный томатный суп в исполнении лучшего шефа 20-го века — чистый вкус спелых томатов, оливковое масло и хересный уксус. Никаких лишних добавок.',
+ time:'20 мин + охлаждение',tt:'quick',diff:'Легко',srv:'4 порции',
+ ingr:['1 кг очень спелых томатов','1 красный перец','0.5 огурца','1 зубчик чеснока','50 мл оливкового масла Extra Virgin','20 мл хересного уксуса','соль'],
+ steps:['Все овощи нарезать, поместить в блендер.','Взбивать на максимуме 2–3 мин до полной однородности.','Тонкой струйкой добавить масло, продолжая взбивать — эмульсия.','Добавить уксус, посолить.','Протереть через сито. Охладить 2–3 ч. Подавать с каплей масла сверху.'],
+ tip:'Гаспачо — это эмульсия. Масло вливается медленно, как в майонез. Именно это даёт кремовый цвет, а не розовый.'},
+
+{id:51,s:'soups',cat:'Кремовые',e:'🥕',g:'g2',
+ chef:'Джеймс Оливер',t:'Морковный суп с имбирём и кокосом',
+ orig:'🇬🇧 Великобритания · 5 Ingredients',
+ desc:'Пять ингредиентов, двадцать минут и невероятно яркий суп — морковь, имбирь, кокосовые сливки и лайм по-оливеровски просто и вкусно.',
+ time:'30 мин',tt:'quick',diff:'Легко',srv:'4 порции',
+ ingr:['700 г моркови','5 см свежего имбиря','400 мл кокосовых сливок','700 мл куриного или овощного бульона','сок и цедра 1 лайма','2 ст.л. оливкового масла','соль, перец','кориандр для подачи'],
+ steps:['Морковь и имбирь нарезать, обжарить в масле 5 мин.','Залить бульоном. Варить 15 мин до мягкости.','Влить кокосовые сливки, варить ещё 5 мин.','Взбить блендером до гладкости. Добавить сок лайма.','Подавать с цедрой и свежим кориандром.'],
+ tip:'«Этот суп готовлю даже в плохой день — он поднимает настроение» — Джеймс Оливер. Кокосовые сливки делают его бархатистым.'},
+
+{id:52,s:'soups',cat:'Мировая классика',e:'🫕',g:'g5',
+ chef:'Джеймс Оливер',t:'Минестроне с корочкой пармезана',
+ orig:'🇮🇹/🇬🇧 Тоскана / Великобритания · Jamie Cooks Italy',
+ desc:'«Прибраться в холодильнике» по-итальянски — всё, что есть, плюс корка пармезана и базилик. Каждый раз разный и всегда совершенный.',
+ time:'1.5 ч',tt:'medium',diff:'Легко',srv:'6 порций',
+ ingr:['400 г томатов','2 кабачка','2 моркови + 2 стебля сельдерея','1 луковица','150 г зелёной фасоли','200 г белой фасоли','200 г пасты','корка пармезана','базилик, оливковое масло','соль, перец, чили'],
+ steps:['Обжарить лук 5 мин, добавить морковь и сельдерей, ещё 5 мин.','Добавить кабачки, оба вида фасоли, томаты и корку пармезана.','Залить 1.5 л воды. Тушить 40–50 мин.','За 15 мин до конца добавить пасту.','Убрать корку. Добавить базилик, полить оливковым маслом.'],
+ tip:'Корка от пармезана — концентрат умами. Никогда не выбрасывайте — храните в морозилке для супов.'},
+
+{id:53,s:'soups',cat:'Мировая классика',e:'🌶',g:'g1',
+ chef:'Джеймс Оливер',t:'Томатный суп с базиликом',
+ orig:'🇬🇧 Великобритания · Jamie\'s Comfort Food',
+ desc:'Простой, но глубокий томатный суп — запечённые помидоры, чеснок и базилик. Оливер называет его своим «счастливым супом».',
+ time:'1 ч',tt:'medium',diff:'Легко',srv:'4 порции',
+ ingr:['1 кг помидоров','1 головка чеснока','1 луковица','1 морковь','500 мл куриного бульона','200 мл сливок','большой пучок базилика','2 ст.л. оливкового масла','сахар, соль, перец','хлеб для гренок'],
+ steps:['Помидоры и чеснок (целый, нечищеный) выложить на противень, сбрызнуть маслом.','Запекать при 200°C 30–35 мин до лёгкой подпалины.','Обжарить лук и морковь. Выжать запечённый чеснок. Добавить помидоры.','Залить бульоном, тушить 15 мин. Добавить базилик.','Взбить, процедить, добавить сливки. Подавать с гренками.'],
+ tip:'Запечённые помидоры — это не вариант, это обязательно. Они теряют кислоту и приобретают сладкую глубину.'},
+
+// ─────────────── КРУПЫ ───────────────
+{id:54,s:'grains',cat:'Ризотто',e:'🍚',g:'g4',
+ chef:'Гвидо Мартини',t:'Миланское ризотто с шафраном',
+ orig:'🇮🇹 Милан · Традиционный',
+ desc:'Золотое, кремовое, ароматное ризотто с шафраном — единственная паста, которую миланцы подают к оссобуко.',
+ time:'35 мин',tt:'quick',diff:'Средне',srv:'4 порции',
+ ingr:['400 г риса Carnaroli','1.2 л горячего говяжьего бульона','0.3 г шафрана','1 луковица','150 мл белого сухого вина','50 г масла','50 г пармезана','30 г масла (мантекатура)','соль'],
+ steps:['Шафран растворить в 50 мл горячего бульона, настоять 30 мин.','Обжарить лук в масле до прозрачности. Рис добавить, поджарить 2 мин.','Влить вино, выпарить. Добавлять горячий бульон половниками, постоянно помешивая.','Через 16–18 мин добавить шафрановый бульон. Рис al dente.','Мантекатура: снять с огня, вмешать холодное масло и пармезан. Немедленно подавать.'],
+ tip:'Мантекатура — самый важный шаг. Холодное масло + горячий рис + интенсивное помешивание = кремовость без сливок.'},
+
+{id:55,s:'grains',cat:'Ризотто',e:'🍄',g:'g4',
+ chef:'Массимо Боттура',t:'Ризотто с белыми грибами',
+ orig:'🇮🇹 Эмилия-Романья · Osteria Francescana ★★★',
+ desc:'Ризотто с порцини — осенний итальянский шедевр. Свежие или сушёные грибы превращают рис в концентрат лесного аромата.',
+ time:'45 мин',tt:'quick',diff:'Средне',srv:'4 порции',
+ ingr:['400 г риса Carnaroli','300 г свежих или 40 г сушёных порцини','1 л грибного бульона','150 мл белого вина','1 луковица + 2 зубчика чеснока','50 г масла + 50 г пармезана','30 г масла (финал)','петрушка, тимьян'],
+ steps:['Сушёные порцини замочить в 500 мл горячей воды 30 мин — вода станет бульоном.','Свежие грибы обжарить с чесноком на сильном огне до румяности.','Лук → рис → вино. Добавлять грибной бульон половниками.','За 5 мин до конца добавить грибы.','Мантекатура с маслом и сыром. Петрушка.'],
+ tip:'Никогда не выливайте воду от замачивания грибов — это чистый умами-бульон.'},
+
+{id:56,s:'grains',cat:'Плов',e:'🍚',g:'g9',
+ chef:'Традиционный',t:'Ферганский плов',
+ orig:'🇺🇿 Фергана, Узбекистан · Традиционный',
+ desc:'Классический ферганский плов — каждое зёрнышко риса отдельно, ни капли лишней воды. Рис отдаёт жирный аромат зиры. Готовится в казане строго по очереди.',
+ time:'2.5 ч',tt:'medium',diff:'Средне',srv:'6–8 порций',
+ ingr:['1 кг риса Девзира','1 кг баранины (рёбра или лопатка)','500 г моркови (жёлтой и красной)','2 луковицы','200 мл растительного масла','2 головки чеснока','2 ч.л. зиры','1 ч.л. барбариса','соль, перец'],
+ steps:['Рис замочить в тёплой солёной воде 1–2 ч.','Прокалить масло в казане. Обжарить лук до тёмно-золотого.','Мясо → обжарить до корочки. Морковь соломкой → 10–15 мин.','Залить кипятком выше мяса — зирвак. Чеснок и специи. Тушить 30 мин.','Засыпать рис ровным слоем. Вода — до уровня риса. Без перемешивания варить до впитывания. Крышка на 20 мин.'],
+ tip:'Никогда не перемешивайте плов во время приготовления. Рис впитывает зирвак снизу вверх — это и есть его душа.'},
+
+{id:57,s:'grains',cat:'Каши и прочее',e:'🌽',g:'g4',
+ chef:'Марчелла Хазан',t:'Кремовая поленда с пармезаном',
+ orig:'🇮🇹 Венеция · «Классическая итальянская»',
+ desc:'Кукурузная каша, приготовленная с постоянным помешиванием в течение часа — с пармезаном и чёрным трюфелем. Бедная еда, ставшая деликатесом.',
+ time:'1 ч 20 мин',tt:'medium',diff:'Легко',srv:'4 порции',
+ ingr:['300 г кукурузной муки (поленда)','1.5 л воды или бульона','1 ч.л. соли','60 г масла','80 г пармезана','чёрный трюфель или трюфельное масло'],
+ steps:['Вскипятить воду с солью. Тонкой струйкой всыпать муку, постоянно мешать венчиком.','Готовить на малом огне, помешивая деревянной ложкой, 45–60 мин.','Снять с огня, добавить масло и сыр, энергично перемешать.','Подавать немедленно с тёртым трюфелем.','Остатки застывают — нарезать и поджарить как полентные брускетты.'],
+ tip:'60 минут помешивания — не преувеличение. Непрерывное помешивание разрушает крахмальные гранулы и создаёт кремовость.'},
+
+{id:58,s:'grains',cat:'Биряни и плов',e:'🇮🇳',g:'g5',
+ chef:'Мадур Джеффри',t:'Ягнячий биряни (Хайдарабадский)',
+ orig:'🇮🇳 Хайдарабад · «Вкусы Индии»',
+ desc:'Царское блюдо Моголов — ароматный рис с бараниной, слоями запечённые вместе методом «дум». Каждая специя имеет значение.',
+ time:'5 ч',tt:'slow',diff:'Сложно',srv:'6–8 порций',
+ ingr:['500 г риса Basmati','800 г баранины','200 г йогурта','3 луковицы','6 зубчиков чеснока + 4 см имбиря','шафран + молоко','гарам масала, кардамон, корица','2 ст.л. масла гхи','жареный лук, кинза, мята'],
+ steps:['Маринад: йогурт + специи + чеснок + имбирь. Баранину мариновать 2–4 ч.','Жареный лук: тонкие кольца на масле 40 мин до глубокого золота.','Рис отварить до полуготовности в пряной воде.','Слои: баранина → рис → шафрановое молоко → жареный лук → зелень. Повторить.','Запечатать фольгой, «дум» при 150°C 45 мин. Не перемешивать — подавать лопаткой.'],
+ tip:'«Дум» (запечатанный пар) — традиция Моголов. Шафран сверху — это не цвет, а аромат.'},
+
+// ─────────────── РЫБА ───────────────
+{id:59,s:'fish',cat:'Морская рыба',e:'🐟',g:'g5',
+ chef:'Джулия Чайлд',t:'Камбала в коричневом масле',
+ orig:'🇫🇷 Париж · «Французский шеф»',
+ desc:'Sole Meunière — первое блюдо, которое попробовала Джулия Чайлд во Франции. «Это был сгусток счастья» — написала она в мемуарах.',
+ time:'20 мин',tt:'quick',diff:'Легко',srv:'2 порции',
+ ingr:['2 камбалы (или 4 филе)','100 г несолёного масла','мука для обвалки','соль, перец','лимонный сок','свежая петрушка'],
+ steps:['Рыбу обсушить, приправить. Обвалять в муке с обеих сторон.','Разогреть сковороду. Добавить 30 г масла, жарить рыбу 3–4 мин с каждой стороны.','Убрать рыбу на тарелку.','В ту же сковороду добавить оставшееся масло. Жарить до орехово-коричневого цвета.','Выжать лимон в масло, добавить петрушку. Немедленно полить рыбу.'],
+ tip:'«Коричневое масло» пахнет лесными орехами. Выжмите лимон сразу после него — кислота останавливает жарку.'},
+
+{id:60,s:'fish',cat:'Морская рыба',e:'🐠',g:'g5',
+ chef:'Нобу Мацухиса',t:'Чёрная треска в мисо (Nobu)',
+ orig:'🇯🇵 Токио / 🇺🇸 Нью-Йорк · Nobu Restaurant',
+ desc:'Самое знаменитое блюдо ресторана Nobu — треска в маринаде из белого мисо и мирина, маринованная 2–3 дня. Нежное, карамелизованное, совершенное.',
+ time:'3 дня',tt:'days',diff:'Легко',srv:'4 порции',
+ ingr:['4 филе чёрной трески по 200 г','200 г белого мисо (Shiro)','100 мл мирина','100 мл саке','60 г сахара'],
+ steps:['Мирин и саке вскипятить (испарить алкоголь). Добавить сахар, растворить. Добавить мисо, перемешать.','Охладить маринад. Погрузить рыбу, накрыть плёнкой.','Мариновать в холодильнике 2–3 дня.','Стряхнуть лишний маринад (не смывать).','Готовить под грилем 8–10 мин или на сковороде + духовка. Маринад карамелизуется.'],
+ tip:'Минимум 2 дня. Три — идеально. Именно долгое маринование даёт то самое умами-таяние во рту.'},
+
+{id:61,s:'fish',cat:'Морская рыба',e:'🥘',g:'g5',
+ chef:'Поль Бокюз',t:'Марсельский буйябес',
+ orig:'🇫🇷 Марсель · Традиционный',
+ desc:'Марсельская уха с тремя видами рыбы и морепродуктами в шафрановом бульоне. Для буйябеса существуют строжайшие правила «Устава».',
+ time:'3 ч',tt:'slow',diff:'Сложно',srv:'6–8 порций',
+ ingr:['2 кг ассорти рыбы (ёрш, пикша, краб)','500 г мидий + 300 г креветок','500 г помидоров','1 фенхель','1 луковица + 6 зубчиков чеснока','0.5 г шафрана','оливковое масло','тимьян, лавр, апельсиновая цедра','хлеб + рули (чесночный майонез)'],
+ steps:['Бульон: рыбные кости и головы с луком и томатами. Вода + шафран + травы. Варить 30 мин, процедить.','Поочерёдно варить рыбу в бульоне: плотную (20 мин), нежную (10 мин).','Моллюски и креветки — в конце.','Хлеб подсушить, натереть чесноком. Рули: майонез + чеснок + шафран.','Бульон и рыба подаются отдельно. Хлеб с рули — окунать в бульон.'],
+ tip:'По закону буйябеса, рыбу режут за столом. Бульон и рыба — два отдельных блюда.'},
+
+{id:62,s:'fish',cat:'Морская рыба',e:'🦞',g:'g5',
+ chef:'Джеймс Оливер',t:'Запечённый лосось с травами',
+ orig:'🇬🇧 Великобритания · Jamie\'s Quick & Easy Food',
+ desc:'Лосось Оливера — просто, быстро, невероятно вкусно. Целый кусок рыбы с лимоном, каперсами и свежими травами. Идеальный ужин за 20 минут.',
+ time:'25 мин',tt:'quick',diff:'Легко',srv:'4 порции',
+ ingr:['4 филе лосося','2 ст.л. оливкового масла','2 ст.л. каперсов','цедра и сок 1 лимона','1 ст.л. дижонской горчицы','свежий укроп + петрушка','соль, перец','лимон кружками'],
+ steps:['Смешать масло, горчицу, лимон, каперсы и зелень.','Лосось выложить кожей вниз на пергамент.','Обильно намазать смесью сверху.','Запекать при 200°C 12–15 мин.','Подавать с варёным картофелем и зелёным салатом.'],
+ tip:'Оливер делает надрезы в рыбе перед маринованием — соус проникает внутрь. Разница заметна.'},
+
+{id:63,s:'fish',cat:'Речная рыба',e:'🐡',g:'g8',
+ chef:'Джеймс Оливер',t:'Запечённая форель с миндалём',
+ orig:'🇬🇧 Великобритания · Jamie\'s Ministry of Food',
+ desc:'Радужная форель, запечённая с поджаренным миндалём, лимоном и маслом — классическое «truite amandine» в исполнении Оливера.',
+ time:'25 мин',tt:'quick',diff:'Легко',srv:'2 порции',
+ ingr:['2 целые форели','80 г миндальных пластинок','80 г масла','2 ст.л. муки','сок 1 лимона','свежая петрушка','соль, перец'],
+ steps:['Форель обсушить, приправить, обвалять в муке.','Жарить в масле 3–4 мин с каждой стороны до золотистой корочки.','Убрать рыбу. В той же сковороде поджарить миндаль до золота.','Добавить оставшееся масло, дать подрумяниться. Выжать лимон.','Полить рыбу миндально-лимонным маслом. Петрушка.'],
+ tip:'Миндаль поджаривается быстро — не отходите от плиты. 30 секунд между золотым и горелым.'},
+
+{id:64,s:'fish',cat:'Речная рыба',e:'🎣',g:'g8',
+ chef:'Жоэль Робюшон',t:'Судак по-польски',
+ orig:'🇫🇷/🇵🇱 Франция / Польша · Классический',
+ desc:'Судак с яйцами, укропом и коричневым маслом — элегантная европейская классика, которую Робюшон считал одним из самых недооценённых блюд из речной рыбы.',
+ time:'30 мин',tt:'quick',diff:'Легко',srv:'4 порции',
+ ingr:['800 г филе судака','3 варёных яйца','100 г масла','большой пучок укропа','сок лимона','соль, перец','мука для обвалки'],
+ steps:['Филе приправить, обвалять в муке.','Жарить в масле 3–4 мин с каждой стороны.','Убрать рыбу. В сковороду добавить масло, нагреть до коричневого цвета.','Добавить рубленые яйца и укроп. Выжать лимон.','Полить рыбу соусом.'],
+ tip:'Судак — нежная рыба, не терпит переготовки. Мясо должно только-только начать отходить от костей.'},
+
+{id:65,s:'fish',cat:'Речная рыба',e:'🐟',g:'g8',
+ chef:'Ален Дюкасс',t:'Щука с картофельным пюре',
+ orig:'🇫🇷 Рона-Альпы, Франция · Le Louis XV ★★★',
+ desc:'Региональная классика долины Роны — щука с нежным картофельным пюре и соусом beurre blanc. Блюдо, которое показывает, что речная рыба может быть haute cuisine.',
+ time:'1 ч',tt:'medium',diff:'Средне',srv:'4 порции',
+ ingr:['800 г филе щуки','600 г картофеля','150 г масла (пюре)','100 мл молока','200 мл белого вина','100 мл сливок','3 шалота','50 г масла (соус)','лимонный сок','соль, белый перец'],
+ steps:['Картофель отварить, протереть через сито с маслом и горячим молоком. Посолить.','Шалот + вино уварить до 2 ст.л. жидкости. Добавить сливки, уварить.','Снять с огня, вбить холодное масло кусочками — beurre blanc.','Щуку приправить, жарить в масле 3–4 мин с каждой стороны.','Подавать на пюре, полить соусом.'],
+ tip:'Beurre blanc (белое масляное) требует чтобы сковорода была снята с огня — масло добавляется в горячую, но не кипящую жидкость.'},
+
+{id:66,s:'fish',cat:'Речная рыба',e:'🍣',g:'g5',
+ chef:'Рене Редзепи',t:'Маринованная речная форель с огурцом',
+ orig:'🇩🇰 Копенгаген · Noma ★★★',
+ desc:'Скандинавская интерпретация гравлакса — форель, маринованная в соли, тёмном сахаре и укропе, с кремом из кисломолочного продукта и маринованным огурцом.',
+ time:'24 ч',tt:'overnight',diff:'Легко',srv:'6 порций',
+ ingr:['1 кг форели (с кожей)','40 г соли','40 г тёмного сахара','пучок укропа','цедра лимона','1 ч.л. белого перца','200 г сметаны или скир','свежий огурец + укроп + уксус (гарнир)'],
+ steps:['Смешать соль, сахар, перец.','Рыбу кожей вниз выложить. Покрыть смесью, сверху — укроп и цедра.','Накрыть, груз сверху, в холодильник на 12–24 ч.','Смыть укроп, обсушить. Нарезать тонко наискосок.','Подавать на сметане с маринованным огурцом и ржаным хлебом.'],
+ tip:'Тёмный сахар (мусковадо) даёт глубокий карамельный оттенок вкуса — не заменяйте белым.'},
+
+{id:67,s:'fish',cat:'Морепродукты',e:'🦐',g:'g5',
+ chef:'Джеймс Оливер',t:'Паэлья с морепродуктами',
+ orig:'🇪🇸/🇬🇧 Валенсия / Великобритания · Jamie Cooks Spain',
+ desc:'Паэлья Оливера — с правильным рисом «бомба», шафраном, кальмарами, мидиями и тигровыми креветками. Самое солнечное блюдо Испании.',
+ time:'1 ч',tt:'medium',diff:'Средне',srv:'4–6 порций',
+ ingr:['400 г риса бомба','500 г тигровых креветок','500 г мидий','300 г кальмара','1 луковица','4 зубчика чеснока','400 г помидоров','0.5 г шафрана','1 л рыбного бульона','оливковое масло','петрушка, лимон'],
+ steps:['Шафран распустить в 100 мл горячего бульона.','На паэльере обжарить лук и чеснок. Добавить кальмара, жарить 5 мин.','Добавить помидоры, тушить 10 мин. Добавить рис, перемешать.','Влить бульон с шафраном — рис должен быть в жидкости. Не мешать!','Через 10 мин выложить мидии и креветки. Готовить ещё 8–10 мин. Накрыть фольгой на 5 мин.'],
+ tip:'Сокорат — поджаристая корочка на дне паэльи — это самое ценное. Не накрывайте слишком рано.'},
+
+// ─────────────── НОВЫЕ: ДЕСЕРТЫ ───────────────
+{id:68,s:'desserts',cat:'Восточные сладости',e:'🍯',g:'g2',
+ chef:'Традиционный Ближний Восток',t:'Пахлава с фисташками',
+ orig:'🇹🇷 Турция / Ближний Восток · Классический рецепт',
+ desc:'Хрустящие слои тонкого теста фило с фисташковой начинкой, пропитанные розовым сиропом. Одна из главных сладостей мировой кулинарии.',
+ time:'2 ч',tt:'medium',diff:'Средне',srv:'30–40 шт',
+ ingr:['500 г теста фило','200 г топлёного масла','300 г молотых фисташек','100 г сахара (начинка)','400 г сахара (сироп)','300 мл воды','2 ст.л. розовой воды','1 ч.л. лимонного сока'],
+ steps:['Сироп: воду с сахаром и лимоном вскипятить, варить 10 мин. Охладить, добавить розовую воду.','Форму смазать маслом. Выложить 8 листов фило, каждый смазывая маслом.','Ровным слоем распределить смесь фисташек с сахаром.','Накрыть ещё 8 листами фило, каждый смазывая маслом.','Нарезать ромбами до выпечки. Запечь при 180°C 35–40 мин до золота. Горячую залить холодным сиропом.'],
+ tip:'Горячая пахлава + холодный сироп — именно этот контраст температур создаёт хруст. Никогда не наоборот.'},
+
+{id:69,s:'desserts',cat:'Восточные сладости',e:'🧇',g:'g6',
+ chef:'Энди Шеф',t:'Кунафа с сыром',
+ orig:'🇵🇸 Палестина · Традиционный ближневосточный',
+ desc:'Горячий десерт из хрустящего теста кадаиф с тянущимся сыром, пропитанный апельсиновым сиропом. Энди Шеф адаптировал рецепт для домашней кухни.',
+ time:'1 ч',tt:'medium',diff:'Средне',srv:'8 порций',
+ ingr:['400 г теста кадаиф (или вермишель)','150 г топлёного масла','400 г моцареллы','200 г рикотты','300 г сахара','200 мл воды','1 ст.л. апельсиновой воды','фисташки молотые для подачи'],
+ steps:['Тесто кадаиф мелко нарубить, перемешать с топлёным маслом.','Сыры смешать.','В форму плотно утрамбовать половину теста.','Выложить сырную начинку. Накрыть оставшимся тестом, утрамбовать.','Выпекать при 200°C 25–30 мин до золота. Сироп: сахар + вода + апельсиновая вода. Залить горячую кунафу. Посыпать фисташками.'],
+ tip:'Подавайте немедленно — через 10 минут сыр застывает и теряет тянущуюся текстуру.'},
+
+{id:70,s:'desserts',cat:'Восточные сладости',e:'🌙',g:'g6',
+ chef:'Традиционный',t:'Турецкий рахат-лукум',
+ orig:'🇹🇷 Стамбул · Традиционный',
+ desc:'Домашний рахат-лукум — нежные кубики с розовой водой и фисташками. Без искусственных красителей, только натуральные ароматы.',
+ time:'3 ч',tt:'slow',diff:'Средне',srv:'50 кубиков',
+ ingr:['400 г сахара','200 мл воды','80 г кукурузного крахмала','1 ч.л. лимонной кислоты','2 ст.л. розовой воды','50 г фисташек','красный пищевой краситель (по желанию)','пудра + крахмал (обвалка)'],
+ steps:['Сахар с водой и лимонной кислотой нагреть до 120°C.','Крахмал развести в 200 мл воды. Влить тонкой струйкой в сироп, постоянно мешая.','Варить на слабом огне 45–60 мин, помешивая, до густой тянучей массы.','Добавить розовую воду и фисташки. Вылить в смазанную форму.','Охладить 3–4 ч. Нарезать кубиками, обвалять в смеси пудры и крахмала.'],
+ tip:'60 минут варки — обязательно. Недоваренный лукум не держит форму и прилипает к зубам.'},
+
+{id:71,s:'desserts',cat:'Японские',e:'🍡',g:'g8',
+ chef:'Нобу Мацухиса',t:'Моти с клубничной начинкой',
+ orig:'🇯🇵 Токио · Японская традиция',
+ desc:'Нежные рисовые шарики моти с клубникой и пастой из белой фасоли — хрустящее снаружи, мягкое внутри. Японский десерт, завоевавший весь мир.',
+ time:'1 ч',tt:'medium',diff:'Средне',srv:'10 шт',
+ ingr:['200 г рисовой муки (мочико)','220 мл воды','80 г сахара','пищевой краситель (розовый)','крахмал для лепки','200 г пасты анко (или нутелла)','10 небольших клубник'],
+ steps:['Смешать рисовую муку, воду и сахар. Добавить краситель.','Поставить в микроволновку на 2 мин, перемешать. Ещё 1 мин, снова перемешать. Ещё 1 мин.','Охладить до комфортной температуры. Рабочую поверхность посыпать крахмалом.','Завернуть клубнику в пасту анко. Разделить тесто моти на 10 частей.','Каждую расплющить, завернуть шарик с клубникой, защипнуть. Хранить в холодильнике.'],
+ tip:'Тесто моти моментально сохнет — работайте быстро и держите его влажным. Крахмал на руках обязателен.'},
+
+{id:72,s:'desserts',cat:'Французская классика',e:'🥞',g:'g7',
+ chef:'Жоэль Робюшон',t:'Крепы Сюзетт',
+ orig:'🇫🇷 Монте-Карло · Café de Paris, 1895',
+ desc:'Тонкие блинчики в карамельном соусе с апельсиновым ликёром, фламбированные прямо за столом — один из самых театральных десертов французской кухни.',
+ time:'45 мин',tt:'quick',diff:'Средне',srv:'4 порции',
+ ingr:['150 г муки','2 яйца','300 мл молока','30 г масла (тесто)','щепотка соли','60 г масла (соус)','60 г сахара','цедра 1 апельсина','100 мл апельсинового сока','50 мл Гран Марнье или Куантро'],
+ steps:['Тесто: муку, яйца, молоко и соль смешать. Оставить 30 мин. Жарить тонкие блинчики.','Соус: масло + сахар нагреть до карамели. Добавить цедру и сок, уварить 3 мин.','Сложить блинчики вчетверо, выложить в соус.','Влить ликёр, наклонить сковороду к огню — фламбе!','Подавать немедленно, поливая горящим соусом.'],
+ tip:'Блинчики должны быть максимально тонкими. Налейте тесто и сразу быстро наклоните сковороду по кругу.'},
+
+{id:73,s:'desserts',cat:'Французская классика',e:'🍮',g:'g7',
+ chef:'Поль Бокюз',t:'Плавающий остров (Иль Флотант)',
+ orig:'🇫🇷 Лион · Традиционный французский',
+ desc:'Невесомые облака взбитого белка, плавающие в ванильном соусе «крем англез» с карамельными нитями. Элегантный французский классический десерт.',
+ time:'1 ч',tt:'medium',diff:'Средне',srv:'4 порции',
+ ingr:['6 белков','150 г сахара','щепотка соли','500 мл молока','5 желтков','100 г сахара (крем)','1 стручок ванили','100 г сахара (карамель)'],
+ steps:['Крем англез: желтки взбить с сахаром, влить горячее ванильное молоко, варить до 82°C. Охладить.','Белки взбить с щепоткой соли, добавить сахар — жёсткая меренга.','Молоко нагреть почти до кипения. Ложкой выкладывать меренгу, варить по 2 мин с каждой стороны.','Выложить острова на крем.','Карамель из сахара — сделать нити, украсить.'],
+ tip:'«Острова» варятся, а не пекутся — это принципиально. Молоко должно лишь едва булькать.'},
+
+// ─────────────── НОВЫЕ: ПАСТА ───────────────
+{id:74,s:'pasta',cat:'Региональная Италия',e:'🥦',g:'g4',
+ chef:'Антонио Карлуччо',t:'Ореккьетте с цветной капустой и анчоусами',
+ orig:'🇮🇹 Апулия · Трattoria Pugliese',
+ desc:'Паста «ушки» из Апулии с брокколи рабе (цима ди рапа), анчоусами и чесноком — идеальный баланс горечи, солёности и оливкового масла.',
+ time:'25 мин',tt:'quick',diff:'Легко',srv:'4 порции',
+ ingr:['400 г ореккьетте','400 г брокколи рабе (или обычного)','6 анчоусов в масле','4 зубчика чеснока','4 ст.л. оливкового масла','1 перец пепперончино','пармезан по желанию','соль'],
+ steps:['Брокколи отварить в подсоленной воде 5 мин, вытащить. В ту же воду добавить пасту.','В большой сковороде разогреть масло, добавить чеснок и анчоусы — до растворения анчоусов.','Добавить пепперончино и брокколи, обжарить 3–4 мин.','Пасту al dente добавить к брокколи с 100 мл воды от варки.','Перемешать. Подавать с пармезаном по желанию.'],
+ tip:'Анчоусы должны полностью раствориться в масле — тогда они дают умами, а не рыбный вкус.'},
+
+{id:75,s:'pasta',cat:'Региональная Италия',e:'🍆',g:'g1',
+ chef:'Марчелла Хазан',t:'Паста алла Норма (сицилийская)',
+ orig:'🇮🇹 Катания, Сицилия · «Классическая итальянская»',
+ desc:'Сицилийская классика — паста с жареным баклажаном, томатным соусом и рикоттой салата. Названа в честь оперы Беллини «Норма».',
+ time:'45 мин',tt:'quick',diff:'Легко',srv:'4 порции',
+ ingr:['400 г ригатони или пенне','2 крупных баклажана','600 г томатов пюре','4 зубчика чеснока','80 мл оливкового масла','100 г рикотты салата (или пармезан)','базилик','соль, перец чили'],
+ steps:['Баклажаны нарезать кубиками, посолить, оставить 20 мин. Промыть, обсушить.','Жарить баклажан на оливковом масле до золотистой корочки. Убрать.','Соус: чеснок в масле, томаты, соль, чили — тушить 15 мин.','Смешать пасту al dente с соусом и баклажаном.','Разложить, посыпать тёртой рикоттой и базиликом.'],
+ tip:'Баклажан нужно жарить порциями на горячем масле — только тогда он поджарится, а не впитает всё масло и не станет жирным.'},
+
+{id:76,s:'pasta',cat:'Региональная Италия',e:'🐟',g:'g5',
+ chef:'Дженнаро Контальдо',t:'Спагетти алле Вонголе',
+ orig:'🇮🇹 Неаполь · Традиционный',
+ desc:'Спагетти с мидиями-вонголе в белом вине и чесноке — неаполитанская прибрежная классика. Рецепт, требующий только свежих моллюсков и хорошего белого вина.',
+ time:'25 мин',tt:'quick',diff:'Легко',srv:'2 порции',
+ ingr:['200 г спагетти','1 кг вонголе (мидий-серцевидок)','150 мл белого сухого вина','4 зубчика чеснока','80 мл оливкового масла','1 перец пепперончино','петрушка','соль'],
+ steps:['Вонголе замочить в солёной воде на 30 мин — выпустят песок.','Разогреть масло, добавить чеснок и пепперончино.','Добавить вонголе, влить вино. Накрыть, готовить 4–5 мин до открытия ракушек.','Процедить жидкость, удалить нераскрытые ракушки.','Спагетти al dente смешать с соусом и вонголе. Петрушка.'],
+ tip:'Никогда не ешьте нераскрытые ракушки — они были мёртвы до приготовления.'},
+
+{id:77,s:'pasta',cat:'Другие соусы',e:'🌿',g:'g9',
+ chef:'Энди Шеф',t:'Паста с горгонзолой и грушей',
+ orig:'🇮🇹/🇷🇺 Италия / Россия · Энди Шеф',
+ desc:'Неожиданное сочетание от Энди Шефа — паста с соусом из горгонзолы и запечённой грушей. Сладкое, острое, кремовое — один из самых вкусных нестандартных соусов.',
+ time:'20 мин',tt:'quick',diff:'Легко',srv:'2 порции',
+ ingr:['200 г пасты (паппарделле или ригатони)','150 г горгонзолы','150 мл сливок 33%','1 спелая груша','30 г грецких орехов (поджаренных)','1 ст.л. масла','мёд 1 ч.л.','тимьян','соль, перец'],
+ steps:['Грушу нарезать дольками, обжарить на масле с тимьяном 3–4 мин. Добавить мёд, карамелизовать.','Соус: сливки нагреть, добавить горгонзолу, помешивать до растворения.','Сварить пасту al dente.','Смешать пасту с соусом из горгонзолы.','Разложить по тарелкам, сверху — груша и грецкие орехи.'],
+ tip:'Горгонзолу берите «дольче» (мягкую) — она сливочнее. «Пиканте» даст более резкий, острый вкус.'},
+
+// ─────────────── НОВЫЕ: СУПЫ ───────────────
+{id:78,s:'soups',cat:'Азиатские',e:'🥥',g:'g4',
+ chef:'Дэвид Томпсон',t:'Том Кха Гай (кокосовый суп с курицей)',
+ orig:'🇹🇭 Бангкок · Nahm ★',
+ desc:'Тайский кокосовый суп с куркумой, лемонграссом и калганом — ароматный, кислый, острый. Один из самых сложных по вкусу бульонов в мире.',
+ time:'30 мин',tt:'quick',diff:'Легко',srv:'4 порции',
+ ingr:['400 мл кокосового молока','400 мл куриного бульона','400 г куриного филе (нарезать)','3 стебля лемонграсса','5 см калгана (или имбиря)','5 листьев кафир-лайма','3 ст.л. рыбного соуса','3 ст.л. сока лайма','2 ч.л. пасты чили','200 г шампиньонов','кинза для подачи'],
+ steps:['Лемонграсс и калган надрезать, листья кафир-лайма надорвать для аромата.','Довести бульон с кокосовым молоком до кипения. Добавить лемонграсс, калган и листья.','Добавить курицу и грибы. Варить 8–10 мин.','Заправить рыбным соусом, соком лайма и пастой чили.','Подавать с кинзой. Лемонграсс и калган не едят.'],
+ tip:'Кафир-лайм нельзя заменить обычной цедрой — аромат совершенно другой. Ищите в азиатских магазинах.'},
+
+{id:79,s:'soups',cat:'Латиноамериканские',e:'🌽',g:'g1',
+ chef:'Рик Бейлесс',t:'Посоле Рохо (мексиканский суп)',
+ orig:'🇲🇽 Герреро, Мексика · Frontera Grill',
+ desc:'Мексиканский суп из гомини (варёной кукурузы) с тушёной свининой в соусе из сушёных чили — блюдо, которое мексиканцы готовят по особым случаям.',
+ time:'4 ч',tt:'slow',diff:'Средне',srv:'6–8 порций',
+ ingr:['1 кг свиной лопатки','800 г гомини (консервированной)','4 перца анчо','3 перца гуахильо','1 луковица','6 зубчиков чеснока','1 ч.л. орегано','1 ч.л. кумина','соль','капуста, редиска, лайм, орегано (подача)'],
+ steps:['Свинину отварить с луком и чесноком до мягкости (2–2.5 ч). Бульон сохранить.','Перцы поджарить, замочить в кипятке 20 мин. Взбить с чесноком, орегано и кумином.','Соус протереть через сито, обжарить в кастрюле 5 мин.','Добавить бульон, свинину (разобранную) и гомини. Варить 30 мин.','Подавать с тонко нарезанной капустой, редиской, лаймом и орегано.'],
+ tip:'Гомини — это варёная в щёлочи кукуруза (никстамаль). Именно она даёт посоле уникальный землистый вкус.'},
+
+{id:80,s:'soups',cat:'Ближневосточные',e:'🫘',g:'g2',
+ chef:'Йотам Оттоленги',t:'Харира (марокканский суп)',
+ orig:'🇲🇦 Марракеш · «Иерусалим»',
+ desc:'Марокканский суп разговения — чечевица, нут, баранина и томаты с куркумой и шафраном. Богатый, ароматный, согревающий.',
+ time:'2 ч',tt:'medium',diff:'Легко',srv:'6 порций',
+ ingr:['400 г баранины (мелкими кусками)','200 г чечевицы','200 г нута (консервированного)','400 г томатов пюре','1 луковица + 4 зубчика чеснока','1 ч.л. куркумы','1 ч.л. корицы','0.5 г шафрана','50 г вермишели','лимон, кинза, петрушка для подачи'],
+ steps:['Обжарить баранину с луком до румяности.','Добавить чеснок и специи, пассеровать 2 мин.','Добавить томаты, залить 1.5 л воды. Варить 1 ч.','Добавить чечевицу и нут, варить ещё 30 мин.','За 10 мин до конца добавить вермишель. Подавать с лимоном и зеленью.'],
+ tip:'Харира традиционно загущается мукой, разведённой в воде — добавляйте в конце для нужной консистенции.'},
+
+{id:81,s:'soups',cat:'Русская классика',e:'🫕',g:'g1',
+ chef:'Юлия Высоцкая',t:'Борщ с говядиной',
+ orig:'🇷🇺/🇺🇦 Россия / Украина · «Едим Дома»',
+ desc:'Классический борщ — насыщенный свекольный бульон с говядиной, капустой и томатом. Юлия Высоцкая собрала лучшие приёмы для самого богатого вкуса.',
+ time:'3 ч',tt:'slow',diff:'Легко',srv:'8 порций',
+ ingr:['800 г говядины на кости','3 свёклы','0.5 кочана капусты','3 картофелины','2 моркови','1 луковица','3 ст.л. томатной пасты','4 зубчика чеснока','уксус 1 ст.л.','сметана, зелень (подача)','лавровый лист, соль, перец'],
+ steps:['Говядину залить холодной водой, довести до кипения, слить. Залить снова, варить 1.5–2 ч с луком и лавром.','Свёклу натереть, тушить с томатной пастой и уксусом 20 мин — уксус сохраняет цвет.','Добавить в бульон картофель и морковь. Через 10 мин — капусту.','Добавить свёклу, варить 10 мин. Чеснок в конце.','Настоять 30 мин. Подавать со сметаной и зеленью.'],
+ tip:'Уксус в свёкольной зажарке — обязательно. Он фиксирует насыщенный красный цвет и добавляет кислоту.'},
+
+{id:82,s:'soups',cat:'Русская классика',e:'🐟',g:'g5',
+ chef:'Юлия Высоцкая',t:'Уха царская',
+ orig:'🇷🇺 Россия · «Едим Дома»',
+ desc:'Тройная уха — три закладки рыбы для прозрачного золотого бульона. Юлия Высоцкая называет это «самым честным русским супом».',
+ time:'2 ч',tt:'medium',diff:'Средне',srv:'6 порций',
+ ingr:['500 г рыбных костей и голов (бульон)','300 г белой рыбы (судак или окунь)','300 г лосося','2 картофелины','1 луковица','1 морковь','лавровый лист','10 горошин перца','укроп','50 мл водки (по желанию)','соль'],
+ steps:['Первая закладка: головы и кости + лук, морковь, лавр. Варить 40 мин, процедить.','Бульон должен быть прозрачным. Если мутный — опустить сырой белок и снять при нагреве (оттяжка).','Вторая закладка: картофель + белая рыба, варить 15 мин.','Третья закладка: лосось, варить 7–8 мин.','В конце — водка (выпаривает запах), укроп.'],
+ tip:'Водка — не традиция, а технология: алкоголь нейтрализует запах тины и рыбы. Можно не добавлять, но разница есть.'},
+
+// ─────────────── НОВЫЕ: ВЫПЕЧКА ───────────────
+{id:83,s:'baking',cat:'Пончики и жареное',e:'🍩',g:'g2',
+ chef:'Пол Голливуд',t:'Пончики с заварным кремом',
+ orig:'🇬🇧 Великобритания · The Great British Bake Off',
+ desc:'Классические английские пончики от судьи «Великого пекарского шоу» — воздушные, с тонкой корочкой и нежным ванильным кремом внутри.',
+ time:'3 ч',tt:'medium',diff:'Средне',srv:'12 шт',
+ ingr:['500 г муки','7 г дрожжей','50 г сахара','1 ч.л. соли','2 яйца','80 г масла','150 мл тёплого молока','100 мл воды','масло для фритюра','500 мл молока + 5 желтков + 80 г сахара + 40 г крахмала (крем)','сахар для посыпки'],
+ steps:['Замесить дрожжевое тесто, дать подойти 1.5 ч.','Сформировать шарики 60 г. Расстойка 45 мин.','Заварной крем: желтки с сахаром, крахмал, горячее молоко → варить до загустения. Охладить.','Жарить пончики во фритюре при 175°C 2.5–3 мин с каждой стороны.','Горячие обвалять в сахаре. Наполнить кремом через кондитерский мешок.'],
+ tip:'Температура масла критична — 175°C. Ниже — жирные, выше — сырые внутри. Проверяйте термометром.'},
+
+{id:84,s:'baking',cat:'Пончики и жареное',e:'🥐',g:'g2',
+ chef:'Энди Шеф',t:'Берлинеры (немецкие пончики)',
+ orig:'🇩🇪 Берлин · Традиционный немецкий',
+ desc:'Пухлые берлинеры с малиновым джемом — немецкий Новый год в тарелке. Энди Шеф упрощает процесс без потери результата.',
+ time:'2.5 ч',tt:'medium',diff:'Легко',srv:'10–12 шт',
+ ingr:['500 г муки','7 г дрожжей','60 г сахара','2 яйца + 2 желтка','80 г масла','180 мл тёплого молока','1 ч.л. ванили','цедра лимона','масло для фритюра','малиновый джем','пудра'],
+ steps:['Замесить мягкое тесто, дать подойти 1 ч.','Раскатать 1.5 см, вырезать кружки d=8 см. Расстойка 40 мин.','Жарить при 170°C 2–3 мин с каждой стороны до золота.','Охладить на решётке, наполнить джемом через шприц.','Посыпать пудрой.'],
+ tip:'Тесто берлинеров мягче обычного — не добавляйте муку, даже если кажется липким. Жирность масла компенсирует.'},
+
+{id:85,s:'baking',cat:'Пончики и жареное',e:'🫔',g:'g3',
+ chef:'Рик Бейлесс',t:'Чурросы с горячим шоколадом',
+ orig:'🇪🇸 Мадрид / 🇲🇽 Мексика · Традиционный',
+ desc:'Хрустящие чурросы в сахаре с корицей, которые окунают в густой горячий шоколад — испанский завтрак, ставший мировым стрит-фудом.',
+ time:'30 мин',tt:'quick',diff:'Легко',srv:'4 порции',
+ ingr:['250 мл воды','50 г масла','130 г муки','3 яйца','щепотка соли','масло для фритюра','сахар + 1 ч.л. корицы (обвалка)','200 г тёмного шоколада + 200 мл молока + 1 ч.л. крахмала (соус)'],
+ steps:['Вскипятить воду с маслом и солью. Всыпать муку, вымесить на огне.','По одному вбить яйца, вымешивая.','Отсадить полоски 15 см в горячее масло (180°C). Жарить 2–3 мин.','Обвалять горячие чурросы в смеси сахара с корицей.','Шоколадный соус: молоко нагреть, добавить шоколад, крахмал, варить 2 мин.'],
+ tip:'Звёздчатая насадка обязательна — рёбра делают чурросы хрустящими снаружи. Круглое сопло даст мягкий бублик.'},
+
+// ─────────────── НОВЫЕ: МЯСО ───────────────
+{id:86,s:'meat',cat:'Говядина',e:'🥩',g:'g1',
+ chef:'Ален Дюкасс',t:'Стейк Châteaubriand на двоих',
+ orig:'🇫🇷 Париж · Alain Ducasse au Plaza Athénée ★★★',
+ desc:'Самый торжественный французский стейк — толстое филе, приготовленное в три этапа: сковорода, масло и духовка. Подаётся с соусом беарнез.',
+ time:'45 мин',tt:'medium',diff:'Сложно',srv:'2 порции',
+ ingr:['600 г говяжьего шатобриана (из вырезки)','60 г масла','тимьян, розмарин','4 зубчика чеснока','соль крупная, перец','для беарнеза: 3 желтка, 200 г масла, тархун, уксус, шалот'],
+ steps:['Мясо обсушить, щедро приправить. Дать 30 мин полежать при комнатной температуре.','Обжарить со всех сторон на горячей сковороде до тёмной корочки — 8–10 мин.','Добавить масло, чеснок и травы, поливать (basting) 2 мин.','Довести до готовности в духовке при 180°C 8–10 мин (52°C внутри). Отдых 10 мин.','Беарнез: сироп из уксуса, шалота и тархуна + желтки на водяной бане + масло тонкой струйкой.'],
+ tip:'Беарнез нельзя перегревать — белки желтков свернутся. Оптимально 60–65°C на водяной бане.'},
+
+{id:87,s:'meat',cat:'Свинина',e:'🐷',g:'g2',
+ chef:'Найджел Слейтер',t:'Тушёная свинина с яблоками',
+ orig:'🇬🇧 Великобритания · «Tender»',
+ desc:'Осенний рецепт Найджела Слейтера — свиные щёки, тушёные с яблоками и сидром до состояния, когда мясо распадается от взгляда. Поэзия в кастрюле.',
+ time:'3.5 ч',tt:'slow',diff:'Легко',srv:'4 порции',
+ ingr:['1 кг свиных щёк (или лопатки)','3 яблока (Антоновка или Голден)','300 мл сухого сидра','300 мл куриного бульона','1 луковица','2 ветки тимьяна','1 ст.л. дижонской горчицы','30 г масла','соль, перец'],
+ steps:['Мясо обсушить, приправить. Обжарить в масле до тёмной корочки.','Добавить лук, обжарить 5 мин.','Влить сидр, уварить наполовину. Добавить бульон и тимьян.','Тушить при 150°C 2.5–3 ч. Яблоки добавить за 40 мин до конца.','Добавить горчицу в соус. Подавать с картофельным пюре.'],
+ tip:'«Свиные щёки — самое недооценённое мясо. Они дешевле вырезки, но вкуснее при долгом тушении» — Найджел Слейтер.'},
+
+// ─────────────── НОВЫЕ: РЫБА ───────────────
+{id:88,s:'fish',cat:'Морская рыба',e:'🐡',g:'g5',
+ chef:'Энди Шеф',t:'Рыба в кляре (Fish & Chips)',
+ orig:'🇬🇧 Великобритания / 🇷🇺 Россия · Энди Шеф',
+ desc:'Классический британский Fish & Chips в исполнении Энди Шефа — хрустящий пивной кляр, нежное филе трески и домашний тартар.',
+ time:'40 мин',tt:'quick',diff:'Легко',srv:'4 порции',
+ ingr:['600 г филе трески или пикши','150 г муки + 50 г крахмала (кляр)','200 мл светлого пива','1 яйцо','1 ч.л. соды','соль, перец','масло для фритюра','200 г майонеза + каперсы + корнишоны + укроп (тартар)'],
+ steps:['Тартар: смешать майонез, мелко нарубленные каперсы, корнишоны и укроп.','Рыбу нарезать полосками, обсушить, приправить.','Кляр: мука + крахмал + яйцо + пиво + сода, взбить. Не перемешивать слишком гладко — комки это хорошо.','Обмакнуть рыбу в кляр. Жарить при 180°C 3–4 мин до хруста.','Подавать с картофелем фри и тартаром.'],
+ tip:'Пиво в кляре даёт пузырьки CO2 — именно они создают хрустящую пористую текстуру. Газированная вода работает так же.'},
+
+{id:89,s:'fish',cat:'Морепродукты',e:'🦑',g:'g5',
+ chef:'Гордон Рамзи',t:'Кальмар на гриле с чимичурри',
+ orig:'🇬🇧/🇦🇷 Великобритания / Аргентина · Gordon Ramsay',
+ desc:'Идеальный кальмар от Рамзи — нежный внутри и с дымным грилем снаружи, с аргентинским соусом чимичурри.',
+ time:'20 мин',tt:'quick',diff:'Легко',srv:'2 порции',
+ ingr:['400 г кальмара','3 ст.л. оливкового масла','лимон','соль, перец','большой пучок петрушки','4 зубчика чеснока','1 ч.л. орегано','2 ст.л. красного винного уксуса','80 мл оливкового масла (чимичурри)','чили'],
+ steps:['Чимичурри: всё мелко нарубить, смешать с уксусом и маслом. Дать настояться 30 мин.','Кальмара разрезать вдоль, надсечь ромбами (не насквозь).','Смазать маслом, приправить.','Готовить на очень горячем гриле 1–1.5 мин с каждой стороны — не больше!','Подавать сразу с чимичурри и ломтем лимона.'],
+ tip:'Кальмар — 1.5 минуты на сторону. Дольше — резина навсегда. Это единственное правило, которое нельзя нарушать.'},
+
+// ─────────────── НОВЫЕ: КРУПЫ ───────────────
+{id:90,s:'grains',cat:'Каши и прочее',e:'🫙',g:'g4',
+ chef:'Найджел Слейтер',t:'Ячменный ризотто (Орзотто)',
+ orig:'🇬🇧 Великобритания · «Tender»',
+ desc:'Ризотто из перловки вместо риса — Найджел Слейтер называет его «зимним ризотто». Орех, земля, грибы. Сытное и необычное.',
+ time:'55 мин',tt:'medium',diff:'Средне',srv:'4 порции',
+ ingr:['300 г перловки','1.2 л овощного или куриного бульона','200 г шампиньонов','1 луковица','3 зубчика чеснока','150 мл белого вина','50 г пармезана','30 г масла','петрушка','соль, перец'],
+ steps:['Перловку промыть, обжарить в масле с луком и чесноком 3 мин.','Влить вино, выпарить. Добавлять бульон по половнику, как ризотто.','Грибы отдельно обжарить до румяности, добавить за 10 мин до конца.','Готовить около 40 мин — перловка должна быть мягкой, но с лёгким «укусом».','Снять с огня, вмешать масло и пармезан. Подавать немедленно.'],
+ tip:'Перловка впитывает намного больше жидкости чем рис — держите бульон горячим и не жалейте.'},
+];
+
+
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+let favs = JSON.parse(localStorage.getItem('wrf') || '[]');
+let currentSection = 'desserts';
+let currentCat = {};
+let currentTime = {};
+let currentDiff = {};
+let currentIngr = {};
+
+const GS = ['g1','g2','g3','g4','g5','g6','g7','g8','g9','g10'];
+// ═══════════════════════════════════════════════════
+//  SEASONS  (must be before buildMain)
+// ═══════════════════════════════════════════════════
+const SEASONS = {
+  winter: {
+    months:[12,1,2], ico:'❄️', name:'Зимние', color:'#3a6a8a',
+    desc:'Тушёное мясо, плотные супы, горячий шоколад',
+    ids:[5,6,7,14,20,57,58,64,65,66,71,72,73]
+  },
+  spring: {
+    months:[3,4,5], ico:'🌿', name:'Весенние', color:'#4a8a6a',
+    desc:'Зелень, лёгкая рыба, ризотто, свежие пасты',
+    ids:[1,2,36,37,41,42,43,78,79,80,82,83,84]
+  },
+  summer: {
+    months:[6,7,8], ico:'☀️', name:'Летние', color:'#c9924a',
+    desc:'Томаты, базилик, гриль, холодные десерты',
+    ids:[8,9,30,31,47,48,49,50,51,52,87,88,89]
+  },
+  autumn: {
+    months:[9,10,11], ico:'🍂', name:'Осенние', color:'#b84a7a',
+    desc:'Грибы, тыква, дичь, согревающие крупы',
+    ids:[25,26,27,28,56,60,61,62,63,68,69,70,76]
+  }
+};
+function getCurrentSeason(){
+  const m = new Date().getMonth()+1;
+  for(const key in SEASONS){ if(SEASONS[key].months.includes(m)) return SEASONS[key]; }
+  return SEASONS.spring;
+}
+
+
+const TL = {quick:'⚡ Быстро',medium:'⏱ Часы',slow:'🕐 Долго',overnight:'🌙 Ночь',days:'📅 Дни'};
+const TC = {quick:'bq',medium:'bm',slow:'bs',overnight:'bo',days:'bd'};
+
+function isFav(id){ return favs.includes(id); }
+function toggleFav(id, e){
+  e.stopPropagation();
+  if(isFav(id)) favs=favs.filter(x=>x!==id);
+  else favs.push(id);
+  localStorage.setItem('wrf', JSON.stringify(favs));
+  renderFavPanel();
+  // update all fav buttons
+  document.querySelectorAll(`.fav-btn[data-id="${id}"]`).forEach(b=>{
+    b.classList.toggle('on', isFav(id));
+    b.textContent = isFav(id) ? '★' : '☆';
+  });
+  // update favs tab count
+  document.getElementById('favtab').textContent = `⭐ Избранное${favs.length?` (${favs.length})`:''}`;
+}
+
+// ═══════════════════════════════════════════════════
+//  CARD
+// ═══════════════════════════════════════════════════
+function cardHTML(r, idx){
+  const on = isFav(r.id);
+  const delay = Math.min(idx * 55, 500);
+  return `<div class="rcard" style="animation:cardIn .5s ${delay}ms cubic-bezier(.16,1,.3,1) both" onclick="openModal(${r.id})">
+    <div class="rcard-img ${r.g}">
+      <span style="position:relative;z-index:1">${r.e}</span>
+      <span class="rcard-n">#${r.id}</span>
+      <span class="rcard-fav fav-btn${on?' on':''}" data-id="${r.id}" onclick="toggleFav(${r.id},event)">${on?'★':'☆'}</span>
+      <span class="tbadge ${TC[r.tt]}">${r.time} · ${TL[r.tt]}</span>
+    </div>
+    <div class="rcard-body">
+      <div class="rcard-chef">${r.chef}</div>
+      <div class="rcard-title">${r.t}</div>
+      <div class="rcard-desc">${r.desc}</div>
+      <div class="rcard-foot">
+        <span class="rmeta">⏱ ${r.time}</span>
+        <span class="rmeta">👨‍🍳 ${r.diff}</span>
+        <span class="rmeta">🍽 ${r.srv}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════
+//  BUILD
+// ═══════════════════════════════════════════════════
+function buildNav(){
+  const nav = document.getElementById('snav');
+  nav.innerHTML = SECTIONS.map((s,i)=>{
+    const cls = 'stab'+(i===0?' active':'')+(s.isSeason?' season-tab':'');
+    return `<button id="${s.id==='favs'?'favtab':''}" class="${cls}" onclick="showSection('${s.id}',this)"><span class="te">${s.e}</span>${s.name}</button>`;
+  }).join('');
+}
+
+function buildMain(){
+  const main = document.getElementById('mainContent');
+  let html = `<div id="search-panel" class="search-sec"><div id="sres"></div></div>
+              <div id="fav-panel" class="fav-panel"><div id="favgrid"></div></div>`;
+
+  SECTIONS.filter(s=>s.id!=='favs'&&s.id!=='season').forEach((s,si)=>{
+    const sr = R.filter(r=>r.s===s.id);
+    const cats = [...new Set(sr.map(r=>r.cat))];
+    const times = [...new Set(sr.map(r=>r.tt))];
+    const diffs = [...new Set(sr.map(r=>r.diff))];
+    // collect unique ingredient keywords (first word of each ingredient)
+    const ingSet = new Set();
+    sr.forEach(r=>r.ingr.forEach(i=>{
+      const kw = i.split(' ').slice(-1)[0].replace(/[(),]/g,'').toLowerCase();
+      const main2 = i.replace(/^\d+.*?(г|мл|кг|шт|л|ч\.л|ст\.л)\s*/i,'').split(',')[0].trim();
+      if(main2.length>2 && main2.length<25) ingSet.add(main2);
+    }));
+    const ingrs = [...ingSet].slice(0,30).sort();
+
+    html+=`<div id="sec-${s.id}" class="section-panel${si===0?' active':''}">
+      <div class="sec-top">
+        <div class="sec-title-row">
+          <span class="sec-emoji">${s.e}</span>
+          <h2 class="sec-big" style="color:${s.color}">${s.name}</h2>
+        </div>
+        <p class="sec-sub">Лучшие рецепты от великих шефов мира — проверенные и пошаговые</p>
+        <div class="filters-row">
+          <div class="cat-tabs">
+            <button class="ctab active" onclick="filterSec('${s.id}','all',this,'cat')">Все (${sr.length})</button>
+            ${cats.map(c=>`<button class="ctab" onclick="filterSec('${s.id}','${c.replace(/'/g,"\\'")}',this,'cat')">${c} (${sr.filter(r=>r.cat===c).length})</button>`).join('')}
+          </div>
+          <button class="filter-btn" id="fbtn-${s.id}" onclick="toggleFPanel('${s.id}')">⚙ Фильтры <span class="filter-badge" id="fbadge-${s.id}" style="display:none">0</span></button>
+        </div>
+        <div class="fpanel" id="fp-${s.id}">
+          <div class="fpanel-sections">
+            <div class="fpanel-group">
+              <div class="fpanel-label">Время готовки</div>
+              <div class="ftag-wrap" id="fpt-${s.id}">
+                ${times.map(tt=>`<button class="ftag" onclick="filterSec('${s.id}','${tt}',this,'time')">${TL[tt]}</button>`).join('')}
+              </div>
+            </div>
+            <div class="fpanel-group">
+              <div class="fpanel-label">Сложность</div>
+              <div class="ftag-wrap" id="fpd-${s.id}">
+                ${diffs.map(d=>`<button class="ftag" onclick="filterSec('${s.id}','${d}',this,'diff')">${d}</button>`).join('')}
+              </div>
+            </div>
+            <div class="fpanel-group" style="flex:2;min-width:260px">
+              <div class="fpanel-label">Ингредиенты (можно несколько)</div>
+              <div class="ftag-wrap" id="fpi-${s.id}">
+                ${ingrs.map(ig=>`<button class="ftag" onclick="filterSec('${s.id}','${ig.replace(/'/g,"\\'")}',this,'ingr')">${ig}</button>`).join('')}
+              </div>
+            </div>
+          </div>
+          <div class="fpanel-reset"><button onclick="resetFilters('${s.id}')">✕ Сбросить все фильтры</button></div>
+        </div>
+      </div>
+      <div class="rgrid" id="grid-${s.id}">
+        ${sr.map((r,i)=>cardHTML(r,i)).join('')}
+      </div>
+    </div>`;
+  });
+
+
+
+  main.innerHTML = html;
+  document.getElementById('cnt').textContent = R.length;
+}
+
+function toggleFPanel(sid){
+  const fp = document.getElementById('fp-'+sid);
+  const btn = document.getElementById('fbtn-'+sid);
+  fp.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+function resetFilters(sid){
+  currentCat[sid]='all'; currentTime[sid]=null; currentDiff[sid]=null; currentIngr[sid]=[];
+  const panel = document.getElementById('sec-'+sid);
+  panel.querySelectorAll('.ctab').forEach((b,i)=>b.classList.toggle('active',i===0));
+  panel.querySelectorAll('.ftag').forEach(b=>b.classList.remove('active'));
+  updateBadge(sid);
+  applyFilters(sid);
+}
+
+function updateBadge(sid){
+  const count = (currentTime[sid]?1:0)+(currentDiff[sid]?1:0)+(currentIngr[sid]||[]).length;
+  const badge = document.getElementById('fbadge-'+sid);
+  if(count>0){badge.style.display='inline-flex';badge.textContent=count;}
+  else badge.style.display='none';
+}
+
+function applyFilters(sid){
+  const cat = currentCat[sid]||'all';
+  const tt = currentTime[sid]||null;
+  const diff = currentDiff[sid]||null;
+  const ingrs = currentIngr[sid]||[];
+  let recs = R.filter(r=>r.s===sid);
+  if(cat!=='all') recs=recs.filter(r=>r.cat===cat);
+  if(tt) recs=recs.filter(r=>r.tt===tt);
+  if(diff) recs=recs.filter(r=>r.diff===diff);
+  if(ingrs.length) recs=recs.filter(r=>ingrs.every(ig=>r.ingr.join(' ').toLowerCase().includes(ig.toLowerCase())));
+  document.getElementById('grid-'+sid).innerHTML = recs.length
+    ? recs.map((r,i)=>cardHTML(r,i)).join('')
+    : '<div class="no-res">Ничего не найдено — попробуйте сбросить фильтры</div>';
+}
+
+function filterSec(sid, val, btn, type){
+  if(type==='cat'){
+    document.getElementById('sec-'+sid).querySelectorAll('.ctab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active'); currentCat[sid]=val;
+  } else if(type==='time'){
+    if(btn.classList.contains('active')){btn.classList.remove('active');currentTime[sid]=null;}
+    else{document.getElementById('fpt-'+sid).querySelectorAll('.ftag').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentTime[sid]=val;}
+  } else if(type==='diff'){
+    if(btn.classList.contains('active')){btn.classList.remove('active');currentDiff[sid]=null;}
+    else{document.getElementById('fpd-'+sid).querySelectorAll('.ftag').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentDiff[sid]=val;}
+  } else if(type==='ingr'){
+    if(!currentIngr[sid]) currentIngr[sid]=[];
+    if(btn.classList.contains('active')){btn.classList.remove('active');currentIngr[sid]=currentIngr[sid].filter(x=>x!==val);}
+    else{btn.classList.add('active');currentIngr[sid].push(val);}
+  }
+  updateBadge(sid);
+  applyFilters(sid);
+}
+
+function showSection(id, btn){
+  document.querySelectorAll('.section-panel,.search-sec,.fav-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('si').value='';
+  btn.classList.add('active');
+  currentSection=id;
+  // haptic-style button pop
+  btn.style.transform='scale(.92)';
+  requestAnimationFrame(()=>{ btn.style.transition='transform .3s cubic-bezier(.34,1.56,.64,1)'; btn.style.transform='scale(1)'; });
+  setTimeout(()=>{ btn.style.transition=''; btn.style.transform=''; }, 350);
+  if(id==='favs'){ renderFavPanel(); document.getElementById('fav-panel').classList.add('active'); }
+  else { document.getElementById('sec-'+id)?.classList.add('active'); }
+  btn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  // scroll main to top on section switch
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function renderFavPanel(){
+  const el = document.getElementById('favgrid');
+  const favR = R.filter(r=>favs.includes(r.id));
+  if(!favR.length){ el.innerHTML='<div class="fav-empty">Вы ещё не добавили ни одного рецепта в избранное.<br>Нажимайте ★ на любой карточке.</div>'; return; }
+  el.innerHTML=`<div class="rgrid">${favR.map((r,i)=>cardHTML(r,i)).join('')}</div>`;
+}
+
+// ═══════════════════════════════════════════════════
+//  SEARCH
+// ═══════════════════════════════════════════════════
+function doSearch(q){
+  document.querySelectorAll('.section-panel,.fav-panel').forEach(p=>p.classList.remove('active'));
+  const el = document.getElementById('sres');
+  const sp = document.getElementById('search-panel');
+  if(!q.trim()){ sp.classList.remove('active'); document.getElementById('sec-'+currentSection)?.classList.add('active'); return; }
+  sp.classList.add('active');
+  const ql = q.toLowerCase();
+  const found = R.filter(r=>r.t.toLowerCase().includes(ql)||r.chef.toLowerCase().includes(ql)||r.desc.toLowerCase().includes(ql)||r.cat.toLowerCase().includes(ql)||r.ingr.join(' ').toLowerCase().includes(ql));
+  if(!found.length){ el.innerHTML='<div class="no-res">Ничего не найдено по запросу «'+q+'»</div>'; return; }
+  el.innerHTML=`<div style="margin-bottom:24px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);animation:heroFadeDown .3s ease both">Найдено: ${found.length} рецептов</div>
+    <div class="rgrid">${found.map((r,i)=>cardHTML(r,i)).join('')}</div>`;
+}
+
+// ═══════════════════════════════════════════════════
+//  MODAL
+// ═══════════════════════════════════════════════════
+// Expanded pairings data: {icon, cat, vals, tip}
+function getPairings(r){
+  const t=r.t.toLowerCase();
+  const P={};
+
+  if(r.s==='desserts'){
+    P['🍷']={cat:'Вино / Ликёр',vals:'Мускат · Сотерн · Просекко',tip:'Сладкое вино должно быть слаще блюда'};
+    P['☕']={cat:'Кофе / Чай',vals:'Эспрессо · Чай Дарджилинг · Матча',tip:'Горький кофе балансирует сладость'};
+    P['🍓']={cat:'Подача',vals:'Свежие ягоды · Взбитые сливки · Мята'};
+    P['🌰']={cat:'Текстура',vals:'Поджаренные орехи · Безе · Бисквит',tip:'Добавляет хруст'};
+    if(t.includes('тирами')){
+      P['🍷']={cat:'Вино',vals:'Марсала · Мускат д\'Асти · Амаретто',tip:'Классика — амаретто добавляет миндальный тон'};
+      P['☕']={cat:'Кофе',vals:'Двойной эспрессо · Айс американо'};
+      P['🍫']={cat:'Рядом',vals:'Тёмный шоколад 72% · Миндальное печенье'};
+    }
+    if(t.includes('шоколад')||t.includes('фондан')){
+      P['🍷']={cat:'Вино',vals:'Портвейн Ruby · Амаретто · Тёмный херес',tip:'Портвейн с тёмным шоколадом — классика'};
+      P['🍓']={cat:'Соус / Подача',vals:'Малиновый соус · Флёр де сель · Мороженое ваниль'};
+      P['🍺']={cat:'Пиво (необычно)',vals:'Тёмный стаут · Портер',tip:'Горечь стаута и шоколад — отличный дуэт'};
+    }
+    if(t.includes('баклава')||t.includes('кунафа')||t.includes('лукум')){
+      P['☕']={cat:'Напиток',vals:'Турецкий кофе по-восточному · Мятный чай',tip:'Пьют маленькими глотками, чередуя со сладостью'};
+      P['🌿']={cat:'Зелень / Специи',vals:'Кардамон · Апельсиновая цедра · Розовая вода'};
+      P['🫙']={cat:'Рядом на столе',vals:'Фисташки · Сухофрукты · Халва'};
+    }
+    if(t.includes('крем-бр')||t.includes('парфе')||t.includes('панна')){
+      P['🍷']={cat:'Вино',vals:'Сотерн · Бор де Вентуру · Пино Гри с остаточным сахаром'};
+      P['🍓']={cat:'Ягоды',vals:'Клубника · Малина · Маракуйя'};
+      P['🥖']={cat:'Рядом',vals:'Тонкое сливочное печенье · Бискотти'};
+    }
+  }
+
+  else if(r.s==='pasta'){
+    P['🍷']={cat:'Вино',vals:'Кьянти Классико · Барбера д\'Асти · Вермонтино',tip:'Итальянская паста требует итальянского вина'};
+    P['🥖']={cat:'Хлеб',vals:'Фокачча · Чиабатта · Гриссини',tip:'Для «fare la scarpetta» — подбирать соус'};
+    P['🥗']={cat:'Салат до',vals:'Рукола с пармезаном · Брускетта · Карпаччо'};
+    P['💧']={cat:'Вода',vals:'Минеральная газированная · Сан Пеллегрино'};
+    if(t.includes('карбонара')||t.includes('аматрич')){
+      P['🍷']={cat:'Вино',vals:'Фраскати · Верментино · Пино Бьянко Альто-Адидже',tip:'Лёгкое белое — не перебивает яйца и сыр'};
+      P['🧀']={cat:'Сыр финал',vals:'Тёртый Pecorino Romano · Пармезан 24 мес'};
+      P['🌿']={cat:'Завершение',vals:'Крупно молотый чёрный перец · Базилик'};
+    }
+    if(t.includes('болоньезе')||t.includes('лазань')||t.includes('рагу')){
+      P['🍷']={cat:'Вино',vals:'Санджовезе · Монтепульчано д\'Абруццо · Кьянти',tip:'Кислота санджовезе режет жирность рагу'};
+      P['🥗']={cat:'Салат',vals:'Инсалата мизо · Рукола с лимоном'};
+      P['🫙']={cat:'До блюда',vals:'Антипасти · Брускетта с томатами'};
+      P['🍮']={cat:'После',vals:'Тирамису · Панна котта'};
+    }
+    if(t.includes('песто')||t.includes('генуэзс')){
+      P['🍷']={cat:'Вино',vals:'Верментино · Пиньо ди Понент · Верначча ди Сан Джиминьяно'};
+      P['🧀']={cat:'Финальный сыр',vals:'Пармезан · Pecorino Sardo · Кедровые орехи'};
+      P['🌿']={cat:'Свежесть',vals:'Базилик целый · Лимонная цедра'};
+    }
+    if(t.includes('вонголе')||t.includes('морепрод')){
+      P['🍷']={cat:'Вино',vals:'Верначча · Пино Гриджо · Greco di Tufo',tip:'Только белое — красное убивает моллюсков'};
+      P['🥖']={cat:'Хлеб',vals:'Поджаренная чиабатта · Брускетта с чесноком'};
+      P['🍋']={cat:'Кислота',vals:'Лимон · Каперсы · Петрушка'};
+    }
+  }
+
+  else if(r.s==='baking'){
+    P['☕']={cat:'Напиток',vals:'Фильтр-кофе · Капучино · Травяной чай',tip:'Зависит от сладости выпечки'};
+    P['🍯']={cat:'Намазка',vals:'Сливочное масло · Мёд · Джем домашний'};
+    P['🌿']={cat:'Ароматы',vals:'Свежая мята · Тимьян · Корица'};
+    if(t.includes('хлеб')||t.includes('батон')||t.includes('чиабатт')||t.includes('фокачч')||t.includes('багет')){
+      P['🧀']={cat:'Сыр / Спред',vals:'Буррата · Рикотта · Оливковое масло Extra Virgin',tip:'Нейтральный свежий сыр не перебивает хлеб'};
+      P['🍷']={cat:'Вино',vals:'Просекко · Соаве · Пино Гриджо · Бьянко ди Кустоза'};
+      P['🫒']={cat:'На стол',vals:'Оливки · Вяленые томаты · Антипасти · Прошутто'};
+      P['🫙']={cat:'Намазка',vals:'Тапенад · Хумус · Айоли',tip:'Тапенад из оливок — идеально к фокачче'};
+      delete P['🍯'];
+    }
+    if(t.includes('круасс')){
+      P['☕']={cat:'Кофе',vals:'Cafe au lait · Флэт-уайт · Капучино',tip:'Французы пьют кофе с молоком, макая круассан'};
+      P['🍓']={cat:'Наполнитель',vals:'Миндальный крем · Клубничный конфитюр · Нутелла'};
+      P['🥂']={cat:'Если праздник',vals:'Просекко · Шампань Брют'};
+    }
+    if(t.includes('пончик')||t.includes('берлин')||t.includes('чуррос')){
+      P['☕']={cat:'Напиток',vals:'Горячий шоколад · Какао · Кофе с молоком',tip:'Горячий шоколад к чуррос — испанская традиция'};
+      P['🍯']={cat:'Дип-соус',vals:'Карамель · Нутелла · Ягодный джем'};
+      P['🍦']={cat:'Рядом',vals:'Шарик ванильного мороженого'};
+    }
+    if(t.includes('тарт')||t.includes('пирог')||t.includes('лимон')){
+      P['☕']={cat:'Чай',vals:'Эрл Грей · Холодный чай с лимоном · Ромашка'};
+      P['🍷']={cat:'Вино',vals:'Мускат · Рислинг Шпатлезе · Шенен Блан'};
+      P['🍓']={cat:'Рядом',vals:'Клубника · Взбитые сливки · Крем-фреш'};
+    }
+  }
+
+  else if(r.s==='meat'){
+    P['🍷']={cat:'Вино красное',vals:'Каберне Совиньон · Мальбек · Бордо AOC',tip:'Танины красного режут жир мяса'};
+    P['🥖']={cat:'Хлеб',vals:'Деревенский хлеб · Чиабатта · Брускетта'};
+    P['🥔']={cat:'Гарнир',vals:'Картофельное пюре · Запечённые корнеплоды · Гратен'};
+    P['🥗']={cat:'Салат до',vals:'Микс зелени с горчичной заправкой · Рукола'};
+    if(t.includes('беф')||t.includes('бургиньон')||t.includes('рёбр')||t.includes('брезир')){
+      P['🍷']={cat:'Вино',vals:'Пино Нуар Бургундь · Кот-дю-Рон · Сира',tip:'Именно Пино Нуар используется в Беф Бургиньон'};
+      P['🍞']={cat:'Хлеб',vals:'Деревенский белый · Чиабатта для соуса'};
+      P['🥦']={cat:'Овощи рядом',vals:'Тушёный шалот · Морковь глазурованная · Горошек'};
+    }
+    if(t.includes('стейк')||t.includes('шатобр')||t.includes('рибай')){
+      P['🍷']={cat:'Вино',vals:'Пойяк · Каберне Фран · Мерло Сен-Эмильон',tip:'Стейк требует мощного танинного вина'};
+      P['🫕']={cat:'Соус',vals:'Беарнез · Чимичурри · Красное масло с тимьяном'};
+      P['🥦']={cat:'Гарнир',vals:'Спаржа на гриле · Картофель-фри · Руккола'};
+      P['🧂']={cat:'Финиш',vals:'Флёр де сель · Перец Телличерри'};
+    }
+    if(t.includes('утк')||t.includes('конфи')){
+      P['🍷']={cat:'Вино',vals:'Пино Нуар Эльзас · Гренаш · Риоха Темпранильо'};
+      P['🫐']={cat:'Соус ягодный',vals:'Вишнёвый · Апельсиновый · Тёрн'};
+      P['🥔']={cat:'Гарнир',vals:'Сарладский картофель · Чечевица Пюи · Фенхель'};
+    }
+    if(t.includes('курица')||t.includes('кок о вен')){
+      P['🍷']={cat:'Вино',vals:'Бургундь Блан · Шардоне · Вионье'};
+      P['🥔']={cat:'Гарнир',vals:'Тимьяновый картофель · Рататуй · Тушёный фенхель'};
+      P['🥖']={cat:'Хлеб',vals:'Бриошь · Мягкий белый — для соуса'};
+    }
+    if(t.includes('свин')||t.includes('порчет')||t.includes('яблок')){
+      P['🍷']={cat:'Вино',vals:'Риоха · Темпранильо · Грюнер Вельтлинер',tip:'Яблочные нотки Grüner Veltliner с яблочной свининой'};
+      P['🍎']={cat:'Кислый акцент',vals:'Яблочный соус · Квашеная капуста · Горчица'};
+      P['🥗']={cat:'Салат',vals:'Фенхель с апельсином · Руккола с грушей'};
+    }
+  }
+
+  else if(r.s==='fish'){
+    P['🍷']={cat:'Вино белое',vals:'Шабли · Совиньон Блан · Пино Гриджо',tip:'Лёгкое белое, без бочки — не перебивает рыбу'};
+    P['🥗']={cat:'Салат',vals:'Зелёный салат · Микс · Руккола с каперсами'};
+    P['🥖']={cat:'Хлеб',vals:'Лёгкий багет · Тосты с маслом · Брускетта'};
+    P['🍋']={cat:'Кислота',vals:'Лимон · Лайм · Каперсы · Каперсная сальса'};
+    if(t.includes('форел')||t.includes('сёмга')||t.includes('лосос')){
+      P['🍷']={cat:'Вино',vals:'Шабли Премьер Крю · Рислинг Эльзас · Бургундь Блан',tip:'Если сёмга с жирным соусом — можно лёгкое Пино Нуар'};
+      P['🌿']={cat:'Травы',vals:'Укроп · Зелёный лук · Эстрагон'};
+      P['🥔']={cat:'Гарнир',vals:'Молодой картофель · Спаржа · Шпинат'};
+    }
+    if(t.includes('треск')||t.includes('судак')||t.includes('щука')||t.includes('налим')){
+      P['🍷']={cat:'Вино',vals:'Мюскаде · Ансени Блан · Рислинг'};
+      P['🥔']={cat:'Гарнир',vals:'Варёный картофель с укропом · Гороховое пюре'};
+      P['🫙']={cat:'Соус',vals:'Тартар · Зелёное масло · Лимонное масло'};
+    }
+    if(t.includes('кальм')||t.includes('осьмин')||t.includes('фри')||t.includes('чипс')){
+      P['🍺']={cat:'Пиво',vals:'Светлый лагер · Сидр · Pilsner Urquell',tip:'К жареному — пиво лучше вина'};
+      P['🫕']={cat:'Соус',vals:'Тартар · Чесночный айоли · Солёные огурцы'};
+      P['🍋']={cat:'Кислота',vals:'Лайм · Винный уксус · Pickles'};
+    }
+    if(t.includes('мисо')||t.includes('терияк')||t.includes('нобу')){
+      P['🍶']={cat:'Японское',vals:'Саке Дайгиндзё · Умэсю · Сёчу'};
+      P['🍵']={cat:'Безалкогольно',vals:'Сенча · Зелёный чай · Воды с огурцом'};
+      P['🍚']={cat:'Гарнир',vals:'Рис для суши · Маринованный имбирь · Эдамаме'};
+    }
+  }
+
+  else if(r.s==='soups'){
+    P['🥖']={cat:'Хлеб',vals:'Ржаной · Гренки с чесноком · Фокачча · Тосты'};
+    P['🥗']={cat:'Подача',vals:'Сметана · Свежая зелень · Кислотный элемент'};
+    P['💧']={cat:'Напиток',vals:'Минеральная вода · Лёгкое белое вино'};
+    if(t.includes('борщ')){
+      P['🍺']={cat:'Традиц. напиток',vals:'Квас · Кефир · Узвар',tip:'Квас — идеальный борщ-компаньон по кислотности'};
+      P['🥖']={cat:'Хлеб',vals:'Ржаной хлеб · Пампушки с чесноком',tip:'Пампушки обмакивать в чесночное масло'};
+      P['🥗']={cat:'Подача',vals:'Жирная сметана · Сало · Зелёный лук · Укроп'};
+      P['🥢']={cat:'Второе',vals:'Вареники с картофелем · Котлеты'};
+    }
+    if(t.includes('луков')){
+      P['🍷']={cat:'Вино',vals:'Грюйер меняет всё — Шардоне · Рислинг · Белый Бургундь'};
+      P['🥖']={cat:'Гренки',vals:'Гренки под грюйером — часть рецепта'};
+    }
+    if(t.includes('том')||t.includes('кха')||t.includes('азиатс')){
+      P['🍺']={cat:'Напиток',vals:'Singha (тайское) · Кокосовый сок · Холодный жасминовый чай',tip:'Кокосовый сок гасит остроту'};
+      P['🌿']={cat:'Свежесть',vals:'Лайм · Рыбный соус · Тайский базилик · Чили'};
+      P['🍚']={cat:'Гарнир',vals:'Рис жасмин · Рисовая лапша'};
+    }
+    if(t.includes('уха')||t.includes('рыбн')){
+      P['🍺']={cat:'Традиция',vals:'Охлаждённая водка (50 г) · Кефир',tip:'Стопка водки в ухе — русская традиция «для запаха»'};
+      P['🥖']={cat:'Хлеб',vals:'Чёрный ржаной · Серый деревенский'};
+      P['🌿']={cat:'Подача',vals:'Укроп · Зелёный лук · Лимон · Чёрный перец'};
+    }
+    if(t.includes('позол')||t.includes('тортилья')||t.includes('мексик')){
+      P['🍺']={cat:'Напиток',vals:'Мексиканское пиво с лаймом · Маргарита · Хорчата'};
+      P['🌮']={cat:'Рядом',vals:'Тортильи · Авокадо · Лайм · Кинза'};
+      P['🌶️']={cat:'Острота',vals:'Чили хабанеро · Сальса верде · Халапеньо'};
+    }
+  }
+
+  else if(r.s==='grains'){
+    P['🍷']={cat:'Вино',vals:'Шардоне без бочки · Вердехо · Пино Гриджо'};
+    P['🥗']={cat:'Салат',vals:'Рукола · Зелёный микс · Пармезан'};
+    P['🧀']={cat:'Сыр',vals:'Пармезан 24 мес · Пекорино Романо'};
+    P['🌿']={cat:'Финиш',vals:'Свежий базилик · Трюфельное масло · Микрозелень'};
+    if(t.includes('ризотто')){
+      P['🍷']={cat:'Вино',vals:'Гави ди Гави · Арнеис · Верментино ди Сардиния',tip:'То же вино, что в ризотто — или Гави'};
+      P['🥗']={cat:'До ризотто',vals:'Карпаччо · Лёгкий зелёный салат'};
+      P['🍮']={cat:'После',vals:'Панна котта · Тирамису · Лимонный сорбет'};
+    }
+    if(t.includes('полента')||t.includes('полен')){
+      P['🍷']={cat:'Вино',vals:'Амароне · Барбера · Тоскана IGT',tip:'Амароне из Венето — классика к поленте'};
+      P['🍄']={cat:'Гарнир',vals:'Грибы порцини · Сливочные соусы · Тушёные овощи'};
+    }
+    if(t.includes('плов')||t.includes('биряни')){
+      P['🍺']={cat:'Напиток',vals:'Айран · Мятный чай · Лагер'};
+      P['🥗']={cat:'Салат',vals:'Лёгкий томатный · Огурец с йогуртом · Ачичук'};
+      P['🫙']={cat:'Соус',vals:'Раита · Чатни манго · Кислое молоко'};
+    }
+  }
+
+  return P;
+}
+
+function openModal(id){
+  const r=R.find(x=>x.id===id); if(!r) return;
+  const mhero=document.getElementById('mhero');
+  mhero.className=`mhero ${r.g}`;
+  mhero.innerHTML=`<span style="position:relative;z-index:1;display:inline-block;animation:statPop .5s cubic-bezier(.34,1.56,.64,1) both">${r.e}</span>`;
+  document.getElementById('mchef').textContent=r.chef;
+  document.getElementById('mtitle').textContent=r.t;
+  document.getElementById('mtags').innerHTML=`<span class="mtag">⏱ ${r.time}</span><span class="mtag">👨‍🍳 ${r.diff}</span><span class="mtag">🍽 ${r.srv}</span><span class="tbadge ${TC[r.tt]}" style="border:none">${r.time} · ${TL[r.tt]}</span>`;
+  document.getElementById('mingr').innerHTML=r.ingr.map(i=>`<div class="iitem">${i}</div>`).join('');
+  document.getElementById('msteps').innerHTML=r.steps.map((s,i)=>`<li class="sitem"><span class="sn">${i+1}</span><span class="stxt">${s}</span></li>`).join('');
+  document.getElementById('mtip').innerHTML=`<div class="tiplabel">💡 Совет шефа</div><div class="tiptxt">${r.tip}</div>`;
+  // Origin + source link
+  const origHtml = r.orig ? `<div class="origbox"><span class="origflag">🌍</span><div class="origtxt"><strong>Происхождение:</strong> ${r.orig}${r.url?`<br><a href="${r.url}" target="_blank" rel="noopener" class="orig-link">Оригинальный рецепт →</a>`:''}</div></div>` : '';
+  document.getElementById('morig').innerHTML=origHtml;
+  // Inline pairings
+  const pairs=getPairings(r);
+  const pkeys=Object.keys(pairs);
+  const mpairs=document.getElementById('mpairs');
+  if(pkeys.length){
+    document.getElementById('mpairs-grid').innerHTML=pkeys.map(k=>{
+      const p=pairs[k], obj=typeof p==='object'?p:{cat:k.slice(2).trim(),vals:p};
+      return `<div class="pair-item"><span class="pair-ico">${k}</span><span class="pair-cat">${obj.cat||''}</span><span class="pair-vals">${obj.vals||''}${obj.tip?`<br><span class="pair-tip">💡 ${obj.tip}</span>`:''}</span></div>`;
+    }).join('');
+    mpairs.style.display='';
+  } else { mpairs.style.display='none'; }
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeOverlay(e){ if(e.target===document.getElementById('overlay')) closeModal(); }
+function closeModal(){ document.getElementById('overlay').classList.remove('open'); document.body.style.overflow=''; }
+let _currentPairId=null;
+function openPairing(){
+  const btn=document.getElementById('mpairbtn');
+  const id=btn._rid;
+  const r=R.find(x=>x.id===id); if(!r) return;
+  const pairs=getPairings(r);
+  const pkeys=Object.keys(pairs);
+  document.getElementById('pmhero').className='pair-modal-hero '+r.g;
+  document.getElementById('pmtitle').textContent=r.t;
+  document.getElementById('pmgrid').innerHTML=pkeys.map(k=>{
+    const p=pairs[k];
+    const ico=k, obj=typeof p==='object'?p:{cat:k.slice(2).trim(),vals:p};
+    return `<div class="pm-card"><span class="pm-card-ico">${ico}</span><span class="pm-card-cat">${obj.cat||''}</span><span class="pm-card-vals">${obj.vals||''}</span>${obj.tip?`<span class="pm-card-tip">💡 ${obj.tip}</span>`:''}</div>`;
+  }).join('');
+  document.getElementById('pair-overlay').classList.add('open');
+}
+function closePairing(){ document.getElementById('pair-overlay').classList.remove('open'); }
+function closePairingOverlay(e){ if(e.target===document.getElementById('pair-overlay')) closePairing(); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+// ── Season strip + sheet ──
+function buildSeasonStrip(){
+  const s = getCurrentSeason();
+  const recs = R.filter(r => s.ids.includes(r.id));
+  document.getElementById('sstrip-label').textContent = s.ico + ' ' + s.name;
+  document.getElementById('sstrip-recs').innerHTML =
+    recs.slice(0,6).map(r=>`<span class="season-strip-chip">${r.t}</span>`).join('');
+}
+function openSeasonSheet(){
+  const s = getCurrentSeason();
+  const recs = R.filter(r => s.ids.includes(r.id));
+  document.getElementById('ssheet-ico').textContent = s.ico;
+  document.getElementById('ssheet-title').textContent = s.name + ' рецепты';
+  document.getElementById('ssheet-desc').textContent = s.desc;
+  document.getElementById('ssheet-grid').innerHTML = recs.map(r=>
+    `<div class="rcard" onclick="closeSeasonSheet();openModal(${r.id})">
+      <div class="rcard-img ${r.g}" style="height:110px">
+        <span style="position:relative;z-index:1;font-size:52px">${r.e}</span>
+        <span class="tbadge ${TC[r.tt]}" style="position:absolute;bottom:8px;right:8px">${r.time}</span>
+      </div>
+      <div class="rcard-body" style="padding:10px 12px 12px">
+        <div class="rcard-chef">${r.chef}</div>
+        <div class="rcard-title" style="font-size:15px">${r.t}</div>
+      </div>
+    </div>`
+  ).join('');
+  document.getElementById('season-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeSeasonSheet(){
+  document.getElementById('season-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeSeasonOverlay(e){ if(e.target===document.getElementById('season-overlay')) closeSeasonSheet(); }
+
+buildNav();
+buildMain();
+buildSeasonStrip();
+
+
+// ═══════════════════════════════════════════════════
+//  GLOSSARY
+// ═══════════════════════════════════════════════════
+const GLOSSARY = {
+  'А': [
+    ['Аль денте', 'Итал. «на зуб» — паста или рис, сваренные до лёгкого сопротивления при укусе. Не сырые, не мягкие.'],
+    ['Антипасти', 'Итальянские закуски перед пастой: оливки, вяленые томаты, сыры, мясная нарезка.'],
+    ['Айоли', 'Провансальский соус из чеснока, оливкового масла и яйца. Близок к майонезу, но с резким чесночным вкусом.'],
+  ],
+  'Б': [
+    ['Бешамель', 'Базовый французский белый соус: масло + мука + молоко. Основа лазаньи, жульена, суфле.'],
+    ['Бланширование', 'Быстрое ошпаривание в кипятке (30 сек – 3 мин) с немедленным охлаждением в льду. Сохраняет цвет и структуру овощей.'],
+    ['Брезирование', 'Медленное тушение мяса в небольшом количестве жидкости под крышкой при низкой температуре. Даёт мягкость и глубину вкуса.'],
+    ['Брюнуаз', 'Мелкая кубическая нарезка овощей 2–3 мм. Используется в соусах и супах.'],
+  ],
+  'В': [
+    ['Вонголе', 'Небольшие морские моллюски. Паста алле вонголе — классика неаполитанской кухни.'],
+  ],
+  'Г': [
+    ['Гратен', 'Запечённое блюдо с румяной корочкой из сыра или сухарей сверху. Гратен дофинуа — картофель со сливками.'],
+    ['Гуанчале', 'Вяленая свиная щека. Подлинный ингредиент карбонары и аматричаны. Жирнее панчетты, с особым вкусом.'],
+  ],
+  'Д': [
+    ['Дегласирование', 'Добавление жидкости (вино, бульон) на горячую сковороду для растворения прижарившихся соков — основа соусов.'],
+    ['Дюксель', 'Мелко рубленые грибы, обжаренные до полного испарения влаги. Используются в Веллингтоне.'],
+  ],
+  'Е': [
+    ['Эмульсия', 'Однородная смесь двух несмешивающихся жидкостей (масло + вода). Майонез, голландез, заправки — эмульсии.'],
+  ],
+  'К': [
+    ['Карпаччо', 'Тонко нарезанное сырое мясо или рыба, заправленные маслом и лимоном. Придумано в Венеции в 1950-х.'],
+    ['Конфи', 'Метод консервации: продукт (утка, чеснок, цитрус) томится в жире или сахаре при низкой температуре.'],
+    ['Карамелизация', 'Нагрев сахара или сахаров в продукте (лук, морковь) до образования коричневой корочки со сладким ореховым вкусом.'],
+  ],
+  'М': [
+    ['Майяр (реакция)', 'Химическая реакция между белками и сахарами при t>140°C. Даёт румяную корочку и сотни вкусовых соединений.'],
+    ['Мантекатура', 'Финальный этап ризотто: вмешивание холодного масла и сыра в горячий рис вне огня. Даёт кремовость.'],
+    ['Мирпуа', 'Классическая ароматная основа: лук, морковь, сельдерей в пропорции 2:1:1. Основа большинства бульонов и соусов.'],
+    ['Мисо', 'Японская паста из ферментированных соевых бобов. Бывает белой (нежная), красной (насыщенная), смешанной.'],
+  ],
+  'П': [
+    ['Панчетта', 'Итальянский вяленый свиной живот. Менее жирный аналог гуанчале, часто используется в пасте.'],
+    ['Пармезан (Parmigiano Reggiano)', 'Твёрдый итальянский сыр с защищённым наименованием. Зреет минимум 12 месяцев. Нельзя заменить «аналогами».'],
+    ['Песто', 'Генуэзский соус: базилик, кедровые орехи, пармезан, пекорино, чеснок, масло. Растирается в ступке, не блендером.'],
+    ['Понзу', 'Японский соус: соевый + цитрусовый сок (юдзу или лимон). Используется как маринад и заправка.'],
+  ],
+  'Р': [
+    ['Рагу', 'Густой мясной соус медленного приготовления. Болоньезе — частный случай рагу.'],
+    ['Редукция', 'Уваривание жидкости (вино, бульон, сливки) для концентрации вкуса и загустения.'],
+    ['Рецепта Pecorino Romano', 'Твёрдый сыр из овечьего молока из Лацио. Более солёный и острый чем пармезан. Обязателен в карбонаре и аматричане.'],
+  ],
+  'С': [
+    ['Сотирование', 'Быстрое обжаривание на сильном огне с небольшим количеством масла. От франц. «прыгать» — продукты подбрасывают.'],
+    ['Су-вид', 'Метод приготовления в вакуумном пакете при точной низкой температуре (54–85°C). Идеальная равномерная прожарка.'],
+  ],
+  'Т': [
+    ['Тапенад', 'Провансальская паста из оливок, каперсов, анчоусов и масла. Намазывается на хлеб или используется как соус.'],
+    ['Темпура', 'Японский тонкий кляр из ледяной воды и муки. Жарится в горячем масле, даёт лёгкую хрустящую оболочку.'],
+  ],
+  'У': [
+    ['Умами', 'Пятый вкус (после сладкого, кислого, солёного, горького) — «мясной», насыщенный. Много в пармезане, томатах, грибах, мисо.'],
+  ],
+  'Ф': [
+    ['Флёр де сель', 'Морская соль ручного сбора с поверхности водоёмов. Крупные влажные хлопья. Используется как финишная соль.'],
+    ['Фондан', 'От франц. «тающий». Шоколадный фондан — кекс с жидкой серединой. Фондан из картофеля — тушёный в масле до хрустящей корки.'],
+  ],
+  'Ц': [
+    ['Цедра', 'Внешний цветной слой кожуры цитрусовых с эфирными маслами. Снимается тёркой. Без белой части (горчит).'],
+  ],
+  'Ш': [
+    ['Шафран', 'Самая дорогая пряность в мире — рыльца крокуса. Даёт золотой цвет и цветочный аромат. Используется в паэлье и ризотто.'],
+  ],
+};
+
+function openGlossary(){
+  const body=document.getElementById('gloss-body');
+  body.innerHTML=Object.entries(GLOSSARY).map(([letter, terms])=>
+    `<div class="gloss-letter">${letter}</div>`+
+    terms.map(([term,def])=>`<div class="gloss-item"><span class="gloss-term">${term}</span><span class="gloss-def">${def}</span></div>`).join('')
+  ).join('');
+  document.getElementById('gloss-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeGlossary(){ document.getElementById('gloss-overlay').classList.remove('open'); document.body.style.overflow=''; }
+function closeGlossaryOverlay(e){ if(e.target===document.getElementById('gloss-overlay')) closeGlossary(); }
+
+</script>
+</body>
+</html>
